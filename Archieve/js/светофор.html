@@ -1,0 +1,48 @@
+<!doctype html>
+<head>
+<style type="text/css">
+  #back > div {
+    width:         70px;
+    height:        70px;
+    border-radius: 70px;
+    margin:        2px;
+  }
+  
+  #back {
+    background-color: gray;
+    width:            74px;
+    padding:          2px;
+  }
+  
+  #red.open      {background-color: red;}
+  #red.closed    {background-color: #300000;}
+  
+  #yellow.open   {background-color: #FFFF00; border-color: #404000;}
+  #yellow.closed {background-color: #303000;}
+
+  #green.open    {background-color: green; border-color: #004000;}
+  #green.closed  {background-color: #003000;}
+ 
+</style>
+</head>
+<body>
+  <div id="back">
+    <div id="red"    onclick="on(this)" class="closed"></div>
+    <div id="yellow" onclick="on(this)" class="open"  ></div>
+    <div id="green"  onclick="on(this)" class="closed"></div>
+  </div>
+
+  
+  <script>
+    
+    function on(elem) {
+      var x, lights = document.querySelectorAll("#back > div");
+      for (x in lights) {
+        lights[x].className = "closed"
+      }
+      elem.className = "open"
+    }
+  </script>
+  
+</body>
+</html>

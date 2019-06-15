@@ -1,0 +1,51 @@
+<HTML> 
+ <HEAD> 
+<TITLE>Лабораторная работа №8-2 |Бондаренко А. А.|</TITLE> 
+<script language="JavaScript"> 
+
+function getMinPositiveNum( arr ) { //Функциональная часть.
+  var x, counter = 1, nowMin = Infinity; // Infinity — самое большое число в js
+
+  for (x = 0; x < arr.length; x++) {
+    if (arr[x] >= 0 && arr[x] < nowMin) {
+      nowMin = arr[x];
+      counter = 1
+    } else if (arr[x] == nowMin) {
+      counter++
+    }
+  }
+  
+  return counter;
+}
+ 
+function run() { // Операционная часть
+  var // определим переменные
+    elements = document.getElementsByName("num"), // собираем поля по имени.
+    numsArr = [ ], x
+  ;
+  
+  for (x = 0; x < elements.length; x++) { // Собираем значения из полей в массив.
+    numsArr.push( +elements[x].value )    // Плюс делает из строки число.
+  }
+  
+  document.getElementsByName("res")[0].value = getMinPositiveNum( numsArr );
+}
+</script> 
+</HEAD> 
+<BODY bgcolor="#FFFFCC"> 
+  Введите числа: 
+  <FORM name="forma"> 
+    Число 1: <input type="text" size=8 name="num"><hr>  
+    Число 2: <input type="text" size=8 name="num"><hr> 
+    Число 3: <input type="text" size=8 name="num"><hr> 
+    Число 4: <input type="text" size=8 name="num"><hr> 
+    Число 5: <input type="text" size=8 name="num"><hr> 
+    Число 6: <input type="text" size=8 name="num"><hr> 
+
+    Количество наименьших элементов
+    <input type="button" value=Определить onClick="run()">  
+    <input type="text" size=8 name="res"><hr>  
+    <input type="reset">  
+  </FORM>  
+</BODY>  
+</HTML>

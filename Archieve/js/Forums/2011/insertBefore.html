@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Untitled</title></head>
+<body>
+<form id = "test">
+	<input type = "text" id = "timer">
+</form>
+<script type="text/javascript">
+window.onload = function () {
+	var t = document.createElement("div");
+	t.innerHTML = "<p>abracadabra</p>";
+	try {
+		document.body.appendChild(t);
+ 		for(var x in t) {
+			document.write("<quote>" + x + ": " + t[x] + "</quote><br>");
+		} 
+	} catch (e) {
+		alert(e.message);
+	}
+	t.removeNode(t);
+}
+</script>
+</body>
+</html>

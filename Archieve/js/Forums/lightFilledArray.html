@@ -1,0 +1,76 @@
+<html>
+<head>
+  <meta charset = "utf-8">
+	<style type = "text/css">
+		table.arrayTable {
+			border-collapse: collapse;
+			margin: 20px;
+		}
+		table.arrayTable td {
+			border: 1px solid black;
+			text-align: center;
+			padding: 5px;
+		}
+	</style>
+</head>
+<body>
+	<script>
+		var arrObj, table;
+		/* Принимает число строк и столбцов,
+				возвращает объект, содержащий двухмерный массив,
+				максимальный и минимальный элементы массива.
+		*/
+		function makeFilledArray (cols, rows) {
+			var array = [], maxEl = -1, minEl = 1001, element, result = {};
+			cols = Math.abs(parseInt(cols));
+			rows = Math.abs(parseInt(rows));
+			if (!cols || !rows) return {"array":[[]], minEl:0, maxEl:0};
+			while (array.length < rows) {
+				array.push([]);
+				while (array[array.length - 1].length < cols) {
+			 		element = parseInt(Math.random() * 101 - Math.random() * 101);
+					array[array.length - 1].push(element);
+					if(element < minEl) minEl = element;
+					if(element > maxEl) maxEl = element;
+				}
+			}
+			result.array = array;
+			result.minEl = minEl;
+			result.maxEl = maxEl;
+			return result;
+		}
+		/* Принимает двухмерный массив, возвращает
+		 заполненный DOM-объект table
+		*/
+		function makeTableFromArray(array) {
+			var 
+				cols = array[0].length, rows = array.length, row,
+				table = document.createElement("table"), tr, td, x, y
+			;
+			table.className = "arrayTable";
+			for(x = 0; x < rows; x++) {
+				tr = document.createElement("tr");
+				row = array[x];
+				for(y = 0; y < cols; y++){
+					td = document.createElement("td");
+					td.innerHTML = row[y]
+					tr.appendChild(td); 
+				}
+				table.appendChild(tr);
+			}
+			return table;
+		}
+		function print(txt) {
+			var p;
+			p = document.createElement("p");
+			p.innerHTML = txt;
+			document.body.appendChild(p);
+		}
+		arrObj = makeFilledArray(10, 10);
+		table = makeTableFromArray(arrObj.array);
+		document.body.appendChild(table);
+		print("<b>max:</b> " + arrObj.maxEl);
+		print("<b>min:</b> " + arrObj.minEl);
+	</script>
+</body>
+</html>

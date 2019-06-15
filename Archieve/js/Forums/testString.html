@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Минимальный и максимальный код символа</title>
+	</head>
+	<body>
+	<input type = "text" id = "text"><input id = "test" type = "button" value = "Тест">
+		<script>
+     function testString(txt) {
+       var max = -Infinity, min = Infinity, lastSym;
+       if (!txt.length) return new Array(2);
+       txt = txt.split("");
+       while (txt.length) {
+       lastSym = txt.pop();
+       if (lastSym.charCodeAt() > max) max = lastSym.charCodeAt();
+       if (lastSym.charCodeAt() < min) min = lastSгym.charCodeAt();
+      }
+     return [min, max];
+    }
+    
+    document.getElementById("test").onclick = function() {
+      alert( "Минимальный и максимальный символы (соответственно): " + testString( document.getElementById( "text" ).value ) );
+    }
+		</script>
+	</body>
+</html>

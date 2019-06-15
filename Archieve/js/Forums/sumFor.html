@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Сумма элементов, кратных заданному числу</title>
+    <style type = "text/css">
+      label {
+        display: block;
+      }
+      input[type="button"], #monitor {
+        margin: 10px 0 0 0;
+      }
+    </style>
+  </head>
+  <body>
+    <label>
+      <input type = "text"> массив (элементы через запятую)
+    </label>
+    <label>
+      <input type = "text"> элементы, кратные этому числу просуммируем
+    </label>
+    <input type = "button" value = "Посчитать">
+    <p id = "monitor"> </p>
+   
+    <script>
+    
+    // Функциональная часть
+    function sumFor( arr, k ) {
+      var x, result = 0, item;
+      k = +k;
+      if( !k ) return 0;
+      
+      for (x = 0; x < arr.length; x++) {
+        if ( isNaN( item = +arr[x] ) ) continue;
+        if ( !( item % k) ) result += item
+      } 
+      
+      return result
+    }
+    
+    //  Операционная часть
+    var calculate = ( function() {
+      var 
+        list = document.getElementsByTagName("input"),
+        arrInput = list[0],
+        kInput = list[1],
+        monitor = document.getElementById("monitor")
+      ;
+      return function() {
+        var arr = arrInput.value.split(",");
+        monitor.innerHTML = "Сумма элементов, кратных " + kInput.value + " равна " + sumFor( arr, kInput.value ); 
+      }
+      
+    } ) ()
+    
+    document.querySelector( "input[value='Посчитать']" ).onclick = calculate;
+   
+    </script>
+  </body>
+</html>

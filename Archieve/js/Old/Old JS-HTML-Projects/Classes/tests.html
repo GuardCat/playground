@@ -1,0 +1,24 @@
+<html><head/><body>
+<script type="text/javascript">
+
+function cTest() {
+	this.a=[];
+	this.obj1={
+	key: "Замок"
+	}
+	this.insert= function (txt) {
+		this.a.push(txt);
+		return (this.a.length);
+	}
+	this.xOut= function () {
+		alert(this.a);
+	}
+}
+var r = new cTest;
+r.insert("2");
+r.insert("fgfh");
+r.insert("odjsfhf");
+r.xOut();
+alert (r.obj1['key']);
+
+</script></html>

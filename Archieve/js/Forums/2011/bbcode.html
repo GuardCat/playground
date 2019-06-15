@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv = "content-type" content = "text/html;charset=windows-1251">
+		<style type = "text/css">
+			input {
+				width: 50px;
+			}
+		</style>
+	</head>
+	<body>
+		<form>
+			<input type = "button" value = "b" style = "font-weight: bold;" class = "bbCodeButton">
+			<input type = "button" value = "i" style = "font-style: italic;" class = "bbCodeButton">
+			<input type = "button" value = "s" style = "text-decoration: line-through;" class = "bbCodeButton">
+			<br>
+			<textarea name='text' id='text' cols='30' rows='10' >Здесь набран текст. Можно набрать ещё, если есть желание.</textarea>
+		</form>
+		<script type="text/javascript">
+			window.onload = function () { 
+				var
+					area = document.querySelector("#text"),
+					buttons = document.querySelectorAll(".bbCodeButton"), x, bbCode
+				;
+				/* 
+					Здесь мы кнопкам назначаем события. 
+					Если вы не сторонник ненавязчивого js, можно просто прописать вызов в onclick тегов, т.е.
+					<input type = "button" value = "b" style = "font-weight: bold;" onclick = "addBBCode(document.querySelector("#text"), '[b]')">
+					например.
+				*/
+				for (x = 0; x < buttons.length; x++) {
+					switch(x) {
+						case 0:
+							bbCode = "[b]";
+						break;
+						case 1:
+							bbCode = "[i]";
+						break;
+						case 2:
+							bbCode = "[s]";
+						break;
+					}
+					buttons[x].onclick = function (bbCode) {
+						return function () {
+							addBBCode (document.querySelector("#text"), bbCode)
+						}
+					} (bbCode);
+				}
+			}		
+			/*
+					Функция addBBCode принимает объект-textarea и bbCode (!только открывающий тег!).
+				Если выделен текст, функция обрамляет его тегами. Если не выделен текст, но курсор в поле, 
+				функция вставит теги в местоположение курсора. Если поле неактивно,
+				или MSIE функция вставит теги в конец textarea. После onblur, когда поле неактивно, теги будут
+				вставляться в последнюю позицию курсора.
+			*/
+			function addBBCode(area, bbCode) { 
+				var 
+					bbCodeCloser = bbCode.substr(0,1) + "/" + bbCode.substr(1), // делаем закрывающий тег.
+					text = area.value, selectionStart = area.selectionStart, selectionEnd = area.selectionEnd
+				;
+				/*
+						Функция insertText принимает текст, в который нужно вставить строку, 
+					номер символа, с которого начнётся вставка и строку.
+					Возвращает строку, составленную из текста, в который, в указанное
+					место, вставлена строка.
+				*/
+				function insertText(recipient, into, donor) {
+					recipient = recipient.split("");
+					recipient.splice (into, 0, donor);
+					return recipient.join("");
+				}		
+				if (!selectionStart) {
+					text += bbCode + bbCodeCloser;
+				} else if (selectionEnd === selectionStart){
+					text = insertText(text, selectionStart, bbCode + bbCodeCloser);
+				} else {
+					text = insertText(text, selectionStart, bbCode);
+					text = insertText(text, selectionEnd + bbCode.length, bbCodeCloser);
+					
+				}
+				area.value = text;
+				return true;
+			}
+		</script>
+	</body>
+</html>

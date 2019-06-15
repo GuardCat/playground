@@ -1,0 +1,120 @@
+<!DOCTYPE html><html><head><meta http-equiv="content-type" content="text/html; charset=utf-8" /></head>
+<!-- НЕ ИСПОЛЬЗУЙТЕ НЕ УНИКАЛЬНЫЕ ID! -->
+<body>
+<div id="cart" name="cart">
+	<div name="item_title" class="item_title">
+		<h4>Book title</h4>
+		<input type = "text" value="" id="item_title"><br />
+	</div>
+	<div name="item_price" class="item_price">
+		<h4>Price</h4>
+		<input type = "text" value="" id="item_price"><br />
+	</div>
+	<br/>
+	<input type="button" value="Submit" class="button" onclick="submit();">
+	<input type="button" value="checkout" class="button" onclick="checkout();">
+</div>
+<script type="text/javascript">
+/* Создаём конструктор класса */
+function Purchases () {
+	this.mainTable = {};
+	this.checkOut = 0;
+	this.countItems = 0;
+}
+/* Создаём общие для всех экземпляров класса свойства прототипа */
+Purchases.prototype.push = function (name, value) {
+	if(!isNaN(+value)) {
+		if (name.length < 1) {
+			makeToast ("Вы ничего не ввели в поле наименования!", "!", 5000);
+			return false;
+		}
+		if (name in this.mainTable) {
+			makeToast ("Этот товар уже есть в списке", "!", 5000);
+			return false;
+		}
+		this.mainTable[name] = +value;
+		this.countItems++;
+		this.checkOut += +value;
+		makeToast ("Добавлен товар: «" + name + "» стоимостью " + +value + " р.", "i", 4000);
+		makeToast ("Всего товаров: " + this.countItems + " на " + this.checkOut + " р.", "i", 10000);
+	} else {
+		makeToast ("Вы ввели в поле «Цена»: «" + value + "». Это не число, данные не будут добавлены. Используйте точку для отделения дробной части от целой.", "!", 10000);
+	}		
+}
+Purchases.prototype.printAll = function () {
+	try {
+		document.getElementById("resultTable").ondblclick();
+	} catch(e) {
+	}
+	var table = document.createElement("table");
+	var caption = document.createElement("caption");
+	table.appendChild(caption);
+	table.id = "resultTable";
+	table.style.border = "1px solid black";
+	caption.innerHTML = "Список выбранных товаров (кликните дважды, чтобы убрать с экрана)";
+	table.ondblclick = function(){this.parentNode.removeChild(this)};
+	table.appendChild(this.addRow("Наименование товара","цена"));
+	for (var x in this.mainTable) {
+		table.appendChild(this.addRow(x, this.mainTable[x] + " р."));
+	}
+	table.appendChild(this.addRow("Итого стоимость", this.checkOut + " р."));
+	document.body.appendChild (table);
+}
+Purchases.prototype.addRow = function(leftCol, rightCol) {
+	var tr = document.createElement("tr");
+	var td = document.createElement("td");
+	td.style.padding="5px";
+	td.innerHTML = leftCol;
+	tr.appendChild(td);
+	td = document.createElement("td");
+	td.style.padding="5px";
+	td.innerHTML = rightCol;
+	tr.appendChild(td);
+	return tr;
+}
+
+var purchases = new Purchases;
+
+function submit() {
+		purchases.push(getVal("item_title"), getVal("item_price"));
+}
+
+function checkout() {
+	purchases.printAll();
+}
+
+/* #################	Вспомогательные функции		####################*/
+function getVal (txt) {
+	return document.getElementById(txt).value
+}
+
+/*
+		Функция makeToast выводит в конце документа
+	span с указанным текстом на указанное 
+	количество миллисекунд. Сообщение удаляется
+	кликом в любой момент.
+		Принимает от нуля до трёх аргументов: 
+	текст для вывода на экран, тип сообщения (один символ,
+	который будет использоваться в качестве флага типа сообщения),
+	время в миллисекундах для отображения сообщения.
+		Если время отрицательное, сообщение не убирается
+	автоматически.
+*/
+function makeToast (txt, type, time) {
+	var infoBlock = document.createElement("div"), colorOfType = "blue";
+	txt = txt || ""; time = time || 3000 ; type = type || "i"; type = type.substr(0, 1);
+	if (type != "i") {
+		colorOfType = "red"
+	}
+	type = "<b><span style='font-size:15pt; color:" + colorOfType + "'>" + type + "</b></span> ";
+	infoBlock.innerHTML = type + txt;
+	infoBlock.style.backgroundColor = "#FFFF90";
+	infoBlock.onclick = function(){this.parentNode.removeChild(this)};
+	document.body.appendChild(infoBlock);
+	if(time > 0) {
+		setTimeout(function(){infoBlock.parentNode.removeChild(infoBlock)}, time);	
+	}
+}
+
+</script>	
+</body></html>

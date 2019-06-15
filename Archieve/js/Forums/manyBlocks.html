@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<style type = "text/css">
+	  .wind {
+	    display: none;
+	  }
+	  
+	  .wind-expand {
+	    display: block;
+	  }
+	</style>
+		<meta charset = "utf-8" />
+		<title>Много блоков</title>
+	</head>
+	<body>
+    <div class = "wind-expand">Это первый блок</div>
+    <div class = "wind">Это второй блок</div>
+    <div class = "wind">Это третий блок</div>
+    <div class = "wind">Это четвертый блок</div>
+		 
+		 <!-- Объединим кнопки в один блок для делегирования ему события-->
+		 <div id = "control">
+		   <input type = "button" value = "Первый блок">
+		   <input type = "button" value = "Второй блок">
+		   <input type = "button" value = "Третий блок">
+		   <input type = "button" value = "Четвертый блок">
+		 </div>
+		 
+		<script>
+   ( function() {
+     var buttons = document.querySelectorAll("#control input"), x;
+     
+     // Каждой кнопке присвоим номер
+     for (x = 0; x < buttons.length; x++) {
+       buttons[x].windNum = x;
+     }
+     
+     document.getElementById("control").onclick = function(e) { // Назначаем событие блоку кнопок
+       e = e || window.event;
+       if (!e.target) e.target = e.srcElement;
+       if (!e.target.type === "button") return false;
+       
+       document.querySelector(".wind-expand").className = "wind";
+       document.querySelectorAll(".wind")[e.target.windNum].className = "wind-expand";
+     }
+   
+   } )( )
+		</script>
+	</body>
+</html>

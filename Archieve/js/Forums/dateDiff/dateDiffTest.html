@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+		</head>
+	<body> 
+		<h1>Расчёт времени до события</h1>
+		<label><input type = "text" id = "date1" value = "2011/11/05 10:00:00"> дата, от которой рассчитываем (всё в формате гггг / мм / дд) </label><br>
+		<label><input type = "text" id = "date2" value = "2012/11/05 22:35:31"> до</label><br>
+		<input type = "button" id = "go" value = "go">
+		<script type="text/javascript" src = "dateDiff.js"></script>
+		<script type="text/javascript">
+			function get(txt){
+				return document.getElementById(txt).value;
+			}
+			document.getElementById("go").onclick = function () {
+				alert (dateDiff(get("date1"), get("date2")));
+			}
+		</script>	
+</body></html>

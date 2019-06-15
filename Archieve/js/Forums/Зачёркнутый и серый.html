@@ -1,0 +1,35 @@
+﻿<!doctype html>
+<html>
+	<head>
+		<style type = "text/css">
+			.exceed {
+				color: gray;
+				text-decoration: line-through;
+			}
+			div.textbox {
+				background-color: #aaa;
+			}
+		</style>
+	</head>
+<body>
+	<div id = "textbox" class = "textbox" contenteditable></div>
+	<script>
+		(function (div, maxLength) {
+				var span = document.createElement("span"), text;
+				span.className = "exceed";
+				span.contentEditable = true;
+				div.onkeyup = function () {
+					if (div.innerText.length + span.innerText.length> maxLength) {
+						text = div.innerText
+						div.innerHTML = text.substr(0, maxLength);
+						span.innerText = text.substr(maxLength);
+						div.appendChild(span);
+					} else {
+						div.innerText +=  span.innerText;
+						span.innerText = "";
+					}
+				}
+			})(document.getElementById("textbox"), 5)
+	</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+﻿<html>
+<head>
+<title>Entitled Document</title>
+<script language="JScript">
+function getCount(){
+	var cn = new ActiveXObject("ADODB.Connection");
+	var strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source = C:\HumanBase_1.0.mdb;Persist Security Info=False";
+	cn.Open(strConn);
+	var rs = new ActiveXObject("ADODB.Recordset");
+	var SQL = "select count(*) from Люди";
+	rs.Open(SQL, cn);
+	alert(rs(0));
+	rs.Close();
+	cn.Close(); 
+ 
+}
+</script>
+</head>
+<body>
+<input type="button" value="Get count" onclick="getCount()">
+</body>
+</html>

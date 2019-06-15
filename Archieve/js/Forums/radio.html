@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset = "utf-8">
+		<title>Радиокнопки</title>
+	</head>
+	<body>
+		<fieldset class = "oneClass">
+			<legend>Первая группа</legend>
+			<input type = "radio" name = "I">
+ 			<input type = "radio" name = "I">
+ 			<input type = "radio" name = "I">
+ 		</fieldset>
+ 		<fieldset class = "otherClass">
+			<legend>Вторая группа, первый блок</legend>
+			<input type = "radio" name = "II.I">
+ 			<input type = "radio" name = "II.I">
+ 			<input type = "radio" name = "II.I">
+ 		</fieldset>
+ 		<fieldset class = "otherClass">
+			<legend>Вторая группа, второй блок</legend>
+			<input type = "radio" name = "II.II">
+ 			<input type = "radio" name = "II.II">
+ 			<input type = "radio" name = "II.II">
+ 		</fieldset> 
+		<script>
+		function RadioController() {
+			var x
+			this.radios = {};
+			this.classes = arguments;
+			for(x = 0; x < arguments.length; x++) {
+				this.radios[arguments[x]] = document.querySelectorAll("." + arguments[x] + "input[type=radio]");
+			}
+ 		}
+		RadioController.prototype = {
+			init: function() {
+				var x, y, fieldsets;
+				for(x = 0; x < this.classes.length; x++) {
+					fieldsets = document.querySelectorAll(this.classes[x]);
+					for(y = 0; y < fieldsets.length; y++) {
+						fieldsets[y].onclick = this.makeMeRadio;
+					}
+				}
+			},
+			makeMeRadio: function(e) {
+				e = e || window.event;
+				var target = e.target || e.srcElement, x, y;
+				for(x in radios) {
+					if(x !== this.parentNode.className) {
+						for(y in radios[x]) {
+							radios[x][y].checked = false;
+						}
+					}
+				}
+			}
+		};
+		RadioController.prototype.constructor = RadioController; 
+ 		try{
+      r = new RadioController("oneClass", "otherClass");
+      alert(r.prototype.init);
+ 		r.init();} catch(e) {alert(e)}
+		</script>
+	</body>
+</html>

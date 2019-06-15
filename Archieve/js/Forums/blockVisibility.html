@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<style type = "text/css">
+	  .note, .noteShowed {
+	    display: none;
+	    background-color: red;
+	    color: white;
+	  }
+	  
+	  .noteShowed {
+	    display: block;
+	  }
+	</style>
+		<meta charset = "utf-8" />
+		<title>Показать / скрыть блок</title>
+	</head>
+	<body>
+    <div class = "note">Скрытый блок</div>
+    <select id = "control">
+          <option value = "one">
+		 
+		<script>
+   ( function() {
+     var buttons = document.querySelectorAll("#control input"), x;
+     
+     // Каждой кнопке присвоим номер
+     for (x = 0; x < buttons.length; x++) {
+       buttons[x].windNum = x;
+     }
+     
+     document.getElementById("control").onclick = function(e) { // Назначаем событие блоку кнопок
+       e = e || window.event;
+       if (!e.target) e.target = e.srcElement;
+       if (!e.target.type === "button") return false;
+       
+       document.querySelector(".wind-expand").className = "wind";
+       document.querySelectorAll(".wind")[e.target.windNum].className = "wind-expand";
+     }
+   
+   } )( )
+		</script>
+	</body>
+</html>

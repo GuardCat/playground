@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset = "utf-8">
+		<title>Редактор списка</title>
+	</head>
+	<body>
+		<input type = "checkbox" id = "checkall">Отметить все
+		<ul id = "list">
+			<li><input type = "checkbox">Пункт списка 1</li>
+			<li><input type = "checkbox">Пункт списка 2</li>
+			<li><input type = "checkbox">Пункт списка 3</li>
+		</ul>
+		
+		<input type = "button" value = "Удалить отмеченные" class = "olBut">
+		<input type = "button" value = "Добавить элемент" class = "olBut">
+
+		<script>
+		
+		(
+			function() { //Завернём все в анонимную функцию, чтобы не захламлять глобальную область видимости
+				var 
+					qs = function(selector, all) { //Сокращение стандартной функции для удобства
+						return all ? 
+							document.querySelectorAll(selector):
+							document.querySelector(selector)
+						;
+					},
+					inputs = qs("#list li input", true),
+					buttons = qs(".olBut", true),
+					list = qs("#list"),
+					checkall = qs("#checkall"),
+					toBorn = function(tag) { //Опять сокращение
+						return document.createElement(tag);
+					}
+				;
+				
+				buttons[0].onclick = function() { //Удаление пункта
+					var x, li;
+					for (x = inputs.length - 1; x >= 0; x--) {
+						if (inputs[x].checked) {
+							li = inputs[x].parentNode;
+							li.parentNode.removeChild(li);
+						}
+					}
+					inputs = qs("#list li input", true); //Обновим лист
+					if (checkall.checked) checkall.checked = false;
+				};
+				
+				buttons[1].onclick = function() {  // Добавляем пункт
+					var li, text = prompt("Введите текст для пункта меню.");
+					if (!text) return false;
+					
+					li = toBorn("li");
+					li.innerHTML = '<input type = "checkbox">' + text;
+					if (list.children.length) {
+						list.insertBefore(li, list.children[0]);
+					} else {
+						list.appendChild(li);
+					}
+					inputs = qs("#list li input", true);
+				}
+				
+				checkall.onclick = function() { // Отметить/снять все
+					for(var x = 0; x < inputs.length; x++) {
+						inputs[x].checked = this.checked;
+					}
+				}
+			}
+		)()
+		
+		</script>
+	</body>
+</html>

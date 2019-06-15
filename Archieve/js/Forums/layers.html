@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset = "windows-1251">
+		<style type ="text/css">
+			#tabControl{width: 700px; height: 500px; background-color: #d0d0d0; padding: 10px; border-radius: 5px}
+				#tabControl div {display: none; padding: 30px 6px 6px 6px; background-color: #d0ffd0; border-radius: 0px 5px 0px 5px; margin-top: 5px; height: 85%}
+				#tabControl div.showed {display: block;}
+				.tab, .tabActive{cursor: pointer; padding: 6px; border-radius: 5px 5px 0 0;}
+				.tab	{background-color: #f0fff0;}
+				.tabActive{background-color: #d0ffd0;}
+					.tab:hover{background-color: green;	color: white;}
+
+		</style>
+	</head>
+	<body>
+		<div id = "tabControl">
+			<span class = "tab" name = "tab1">Первая вкладка</span>
+			<span class = "tab" name = "tab2">Вторая вкладка</span>
+			<span class = "tab" name = "tab3">Третья вкладка</span>
+			<span class = "tab" name = "tab4">Бонус! Четвёртая вкладка!</span>
+			<div id = "tab1">
+				Это текст для вкладки номер раз.
+			</div>
+			<div id = "tab2">
+				А вот уже это для вкладки два.
+			</div>
+			<div id = "tab3">
+				И текст для третьей вкладки.
+			</div>
+			<div id = "tab4">
+				Есть и для четвёртой тоже немного текста
+			</div>
+		</div>
+		<script type="text/javascript">
+			(
+				function (){
+					var 
+						tabs = document.getElementById("tabControl").getElementsByTagName("span"),
+						x, tabsTexts = document.getElementById("tabControl").getElementsByTagName("div")
+					;
+					function hideAllTabs(){
+						for(x = 0; x < tabs.length; x++){
+							tabs[x].className = "tab";
+							tabsTexts[x].className = "";
+						}
+					}
+					function showTab(){
+						hideAllTabs();
+						document.getElementById(this.getAttribute("name")).className = "showed";
+						this.className = "tabActive";
+					};
+					for(x = 0; x < tabs.length; x++){
+						tabs[x].onclick = showTab;
+					}
+					tabs[0].onclick();
+				}
+			)()
+		</script>
+	</body>
+</html>

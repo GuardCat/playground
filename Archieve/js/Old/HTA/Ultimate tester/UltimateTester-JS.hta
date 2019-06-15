@@ -1,0 +1,58 @@
+<html><head>
+<HTA:APPLICATION
+  APPLICATIONNAME="Ultimate Tester"  ID="UT"  VERSION="0.01 work"
+  INNERBORDER="no"  SCROLL="no"  SINGLEINSTANCE="yes"  CONTEXTMENU="no"/>
+<!-- Подключаем внешние блоки -->
+<script src="Classes\ClassMenu.js"></script>
+
+<!-- Основные скрипты -->
+
+<script type="text/javascript">
+window.onload = function () {
+	createMenu();
+}
+function test(){
+	alert(1);
+}
+
+function saveTestFile(){
+	var fso = new ActiveXObject("Scripting.FileSystemObject");
+	testFile = fso.openTextFile ("C:/test1.txt",8);
+	testFile.writeline("test it");
+	testFile.close();
+}
+
+function createMenu(){
+	var menu = new Menu(["Файл","Правка","Вид","Формат"]);
+	menu.addItem("0.","Проверить меню",test);
+	menu.addItem("0.","И ещё проверить меню",test);
+	menu.addItem("1.","Сильно хорошо проверить меню",test);
+	menu.addItem("1.","Проверить меню так себе",test);
+	menu.addItem("3.","Это ваще спрятано",test);
+	menu.addItem("3.","Тест работы FSO",saveTestFile);
+	menu.hide("3.0");
+}
+
+//+++++++ | Всякие вспомогательные функции |+++++
+document.onkeydown = function () {
+//Горячие клавиши
+	switch (self.window.event.keyCode){
+		case 27:
+			if (!gid("menuBase").showedMenu){
+				self.close();
+			} else {
+				gid("menuBase").hideAll();
+			}
+			break
+	}
+}
+document.onclick=function(){
+	if (window.event.srcElement.id[1]!="." && window.event.srcElement.id.length!=1){
+		gid("menuBase").hideAll();
+	}
+}
+</script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,99 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+<html>
+	<body>
+		<form>
+			<table border=1 bordercolor=blue>
+				<tr>
+					<th>
+						КОД
+					</th>
+					<th>
+						КОНТЕЙНЕР
+					</th>
+					<th>
+						ETD
+					</th>
+				</tr>
+				<tr>
+					<td>
+						<input type=text value="1">
+					</td>
+					<td>
+						<input type=text value="MSKU7892546">
+					</td>
+					<td>
+						<input type=text value="2011.28.08">
+					</td>
+				</tr>
+				<tr>
+					<td>
+							<input type=text value="2">
+					</td>
+					<td>
+						<input type=text value="MSKU5896134">
+					</td>
+					<td>
+						<input type=text value="2011.23.07">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type=text value="3">
+					</td>
+					<td>
+						<input type=text value="MSKU1425476">
+					</td>
+					<td>
+						<input type=text value="2011.21.09">
+					</td>
+				</tr>
+			</table>
+		</form>
+		   <script>
+                window.document.onkeydown = function () {
+                        startRefocus();
+                }
+                function startRefocus(event) {
+                        event = event || window.event;
+                        //if (!event.ctrlKey) return; 
+                        var key = event.keyCode;
+                        var targetElement = event.target || event.srcElement;
+                        focusMe(targetElement, key);
+                }
+                function focusMe(input, key) {
+                        var needFocusElement = true;
+                        function detectColumn(td) {
+                                var result = 0, x;
+                                while (td = td.previousElementSibling) {
+                                        ++result
+                                }
+                                return result;
+                        }
+                        try {
+                                switch (key) {
+                                        case 37:
+                                                needFocusElement = input.parentNode.previousElementSibling.querySelector("input");
+                                                break;
+                                        case 39: 
+                                                needFocusElement = input.parentNode.nextElementSibling.querySelector("input");
+                                                break;
+                                        case 38:
+                                                needFocusElement = input.parentNode.parentNode.previousElementSibling.querySelectorAll("td")[detectColumn(input.parentNode)].querySelector("input");
+                                                break;
+                                        case 40: 
+                                                needFocusElement = input.parentNode.parentNode.nextElementSibling.querySelectorAll("td")[detectColumn(input.parentNode)].querySelector("input");
+												break;
+										default:
+												needFocusElement = false;
+                                } 
+                        } catch (e) {
+                                needFocusElement = false;
+                        }
+ 
+                        if (!needFocusElement) return;
+                        needFocusElement.focus();
+                }
+        </script>
+	</body>
+
+</html>

@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+         <title>Изменение размера изображения</title>
+         <script type='text/javascript'>
+            window.onload = function(){
+               var   image = document.getElementById('image'), even = true, imageWidth = image.clientWidth, imageHeight = image.clientHeight;
+               image.onclick = function(){
+                  if (even) {
+                     this.style.width = imageWidth * 4 + "px";
+					 this.style.height = imageHeight * 4 + "px";
+                     even = false;
+                  } else {
+                     this.style.width = imageWidth + "px";
+					 this.style.height = imageHeight + "px";
+                     even = true;
+                  }
+               }
+            };
+         </script>
+  </head>
+  <body>
+         <img src='http://www.google.com/images/logo_sm.gif' id='image' style = "zoom: 1"/>
+  </body>
+</html>

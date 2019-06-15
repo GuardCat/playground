@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset = "utf-8">
+		<title> </title>
+	</head>
+	<body>
+	<input type = "file" multiple>
+		<script>
+     var
+       f = document.querySelector("input"),
+       fileAPIEnabled = window.File && window.FileReader && window.FileList && window.Blob
+     ;
+     
+     ( function( fae ) {
+       if (!fae) {
+         alert( "Ваш браузер не поддерживает FileAPI" )
+         return false
+       }
+       
+       var fr = new FileReader;
+       
+       f.addEventListener( "change", function ( e ) {
+         fr.readAsText( e.target.files[ 0 ], "windows-1251")
+       }, false )
+     
+       fr.onload = function ( e ) {
+         var div = document.createElement( "div" );
+         div.innerHTML = e.target.result
+         document.body.appendChild( div )
+       }
+     } )( fileAPIEnabled )
+     
+     window.onerror = function() {
+       alert(1)
+     }
+		</script>
+	</body>
+</html>

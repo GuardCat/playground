@@ -1,0 +1,297 @@
+﻿ <!doctype html>
+ <html>
+ <head>
+	<style type = "text/css">
+	 .calc {
+		width: 450px;
+		text-align: right;
+		background-color: #F0F8FF;
+		padding: 100px;
+		border: 2px outset white;
+		border-radius: 15px 0px 15px 0px;
+		font-family: arial;
+		font-size: 14px;
+	 }
+	 .calc select {
+		width: 150px;
+		margin: 0 0 10px 10px;
+		font-family: arial;
+		font-size: 12px;
+	 }
+	 .calc div {
+		color: red;
+			/*желаемый цвет
+		font-size : 18px;
+		font-weight : bold;
+		text-align : right;
+		width : 100px;
+	 }
+	 .calc table {
+		border-collapse : collapse;
+		border : 0px;
+	 }
+	</style>
+</head>
+<body>
+<form name="calc" class="calc" id = "calc">
+	<table>
+		<tr>
+			<td>
+				<b>должность &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </b>
+				<select id="dol">
+					<option value="0">Выберите должность </option>
+					<option value="1000">1 техник</option><option value="2000">2 техник</option>
+					<option value="3000">3 техник</option><option value="4000">4 техник</option>
+					<option value="5000">5 техник</option><option value="6000">6 техник</option>
+					<option value="7000">7 техник</option><option value="7500">8 техник</option>
+					<option value="8000">9 техник</option><option value="10000">10 техник</option>
+					<option value="10500">11 техник</option><option value="11000">12 техник</option>
+					<option value="11500">13 техник</option><option value="12000">14 техник</option>
+					<option value="15000">1 инженер</option><option value="16000">2 инженер</option>
+					<option value="17500">3 инженер</option><option value="18000">4 инженер</option>
+					<option value="19500">5 инженер</option><option value="20000">6 инженер</option>
+					<option value="21500">7 инженер</option><option value="22000">8 инженер</option>
+					<option value="23500">9 инженер</option><option value="24000">10 инженер</option>
+					<option value="25500">11 инженер</option><option value="26000">12 инженер</option>
+					<option value="27500">13 инженер</option><option value="28000">14 инженер</option>
+					<option value="29500">15 инженер</option><option value="30000">16 инженер</option>
+					<option value="30500">1 менеджер</option><option value="31000">1 менеджер</option>
+					<option value="31500">1 менеджер</option><option value="32000">1 менеджер</option>
+					<option value="32500">1 менеджер</option><option value="33000">1 менеджер</option>
+					<option value="33500">1 менеджер</option><option value="34000">1 менеджер</option>
+					<option value="34500">1 менеджер</option><option value="35000">1 менеджер</option>
+					<option value="40000">1 директор</option><option value="45000">2 директор</option>
+					<option value="50000">3 директор</option><option value="55000">4 директор</option>
+					<option value="6000">5 директор</option><option value="65000">6 директор</option>
+					<option value="70000">7 директор</option><option value="75000">8 директор</option>
+					<option value="80000">9 директор</option><option value="100000">Большой босс</option>
+				</select>
+				<font color="#0000cd"><label><b>Стаж &nbsp; &nbsp; &nbsp;</b>
+				 <select>
+					<option value="0">менее 2 лет</option><option value="0.1">от 2 до 5 лет
+					</option><option value="0.2">от 10 до 15 лет</option><option value="0.3">от 20 до 25 лет
+					</option><option value="0.4">от 25 лет и более
+				 </select>
+				</font>
+			</td>
+			<td>
+<b>Бонус 2 ; </b>
+ 
+<select id="bonus 2">
+<option value="0">Выберите 
+<option value="0.05"> 5 процентов
+</option><option value="0.1"> 10 процентов
+</option><option value="0.2"> 20 процентов
+</option><option value="0.3"> 30 процентов
+ 
+ 
+ 
+</option></select>
+ </tr>
+ <tr>
+<br>
+<b>Бонус 3 </b><br>
+<select id="bonus3">
+<option value="0">1
+<option value="0.1">2
+</option><option value="0.2">3
+ 
+ 
+ 
+ 
+</option></select>
+ 
+<br><br>
+ <td>
+ <font color="#00008B"><label><b>бонус4</b>
+ <select id="bonus4">
+ <option value="0"> 0% </option>
+ <option value="0.1"> 10% </option>
+ <option value="0.2"> 20% </option>
+ 
+ <option value="0.5"> 50% </option>
+ <option value="0.6"> 60%</option>
+<option value="0.8"> 80% </option>
+ <option value="1"> 100%</option>
+ </select>
+ </label></font>
+ </td>
+ </tr>
+<br>
+ 
+<b>Бонус 5 </b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<select id="bonus5">
+ 
+<option value="0"> 0%
+</option><option value="0.1">10%
+</option><option value="0.2">20%
+</option><option value="0.8">80%
+</option><option value="1">100%
+</option></select>
+<b> ;
+ 
+<b>
+ 
+<br><br>
+<b>бонус 9, </b><br>
+<b> &nbsp; &nbsp; &nbsp;&nbsp; 
+<select id="bonus 9">
+<option value="0"> 0%
+</option><option value="0.05">5%
+</option><option value="0.25">25%
+</option></select>
+<br></b>
+<br><br>
+<b>Бонус6, </b><br>
+<b>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; 
+<select id="bonus6">
+<option value="0">Выберите 
+<option value="0.1"> 1
+</option><option value="0.15">2
+</option></select>
+<br></b>
+<br><br>
+<b>Бонус 7, </b><br>
+< <select id="bonus7">
+<option value="0"> 0%
+</option><option value="0.15"> 15%
+</option><option value="0.3">30%
+</option></select>
+<br></b>
+<br><br>
+<b>Бонус 8 </b><br>
+ <b> nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<select id="bonus8">
+ 
+<option value="0">0%
+</option><option value="0.1">10%
+</option><option value="0.2">20%
+</option><option value="0.5">50%
+</option><option value="0.6"> 60%
+</option><option value="0.9">90%
+</option><option value="1">100%
+</option></select>
+ 
+ 
+ 
+<b>Бонус 10 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </b>
+ 
+<select id="bonus10">
+ 
+<option value="0">0%
+</option><option value="0.1">10%
+</option><option value="0.3"> 30%
+</option><option value="1">100%
+</option></select>
+ 
+<br><br>
+ 
+<b>Бонус 11 </b><br>
+ <b>; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </b>
+<select id="bonus11">
+ 
+<option value="0">0%
+</option><option value="0.1">10%
+</option><option value="0.4">40%
+</option><option value="0.5">50%
+</option><option value="0.6"> 60%
+</option><option value="0.8">80%
+</option><option value="0.9">90%
+</option><option value="1">100%
+</option></select><br>
+ 
+<br><br>
+		<tr>
+			<td>
+				<font color="#0000cd"><label><b>Бонус 1 </b>
+				<select id="worker">
+					<option value="0"> Выберите величину бонуса </option>
+					<option value="1000"> 1 </option>
+					<option value="1500"> 2 </option>
+					<option value="2000"> 3 </option>
+					<option value="2500"> 4 </option>
+					<option value="3000"> 5 </option>
+					<option value="3500"> 6 </option> 
+					<option value="4000"> 7 </option>
+					<option value="4500"> 8 </option>
+					<option value="4500"> 9 </option>
+					<option value="5000"> 10 </option>
+					<option value="5500"> 11 </option>
+					<option value="6000"> 12 </option>
+					<option value="6500"> 13 </option>
+					<option value="7000"> 14 </option>
+					<option value="8000"> 15 </option>
+					<option value="9000"> 16 </option>
+					<option value="10000"> 17</option>
+					<option value="25000"> 18</option>
+					<option value="30000"> 19 </option>
+					<option value="50000"> 20 </option>
+				</select>
+				</label></font>
+			</td>
+			<td rowspan="3">
+				<div id="zptotal"><font color="#800000">30 000р</font>.</div>
+			</td>
+		</tr></table>
+ </form>
+ <script>
+ /*
+ Псевдокласс ZPCalc принимает объекты - поля со значениями. Последним (при наличии "nocapitalize" предпоследним)
+ аргументом принимает объект Node, в который нужно выводить результат расчётов.
+ Каждому полю в onchange записывается функция-перерасчёт данных и вывод их в innerHTML
+ элемента, переданного последним.
+ Если каждый коэффициент следует применять к начальной сумме, не капитализируя результаты
+ вычислений, следует передать последним аргументом строку "nocapitalize"
+ 
+ */
+ 	function ZPCalc() {
+ 		this.capitalize = arguments[arguments.length - 1] !== "nocapitalize";
+ 		this.args = Array.prototype.slice.call(arguments, 0, arguments.length - (this.capitalize ? 1 : 2));
+ 		this.monitor = arguments[arguments.length - (this.capitalize ? 1 : 2)];
+ 		this.start();
+ 	}
+ 	/*
+ Метод псевдокласса ZPCalc calculate производит расчёт по полям. Исходит из того, что
+ любая сумма в value поля, превышающая 50, должна быть прибавлена к результату, все остальные поля
+ считаются коэффициентами и к итогу будет прибавлен результат умножения текущего расчёта на
+ значение поля.
+ Поля расчитываются поочерёдно, в том порядке, в котором были переданы, это следует учитывать.
+ Если необходимо исключить капитализацию (то есть умножать на коэффициент не на текущий расчёт, а на значение
+ первого переданного поля), то последним параметром в класс нужно передать строку "nocapitalize".
+ */
+ 	ZPCalc.prototype.calculate = function () {
+ 		var result = 0;
+ 		if(!this.args.length) return "0р.";
+ 		for(x = 0; x < this.args.length; x++) {
+ 			val = parseFloat(this.args[x].value);
+ 			if(isNaN(val)) {
+ 				continue;
+ 			}
+ 			if(val> 50) {
+ 				result += val;
+ 			}
+ 			else {
+ 				result += (this.capitalize ? result : parseFloat(this.args[0].value)) * val;
+ 			}
+ 		}
+ 		return result + "р.";
+ 	}
+ 	ZPCalc.prototype.start = function () {
+ 		for(x = 0; x < this.args.length; x++) {
+ 			this.args[x].onchange = (
+
+ 			function (that) {
+ 				return function () {
+ 					that.monitor.innerHTML = that.calculate()
+ 				}
+ 			})(this)
+ 		}
+ 		this.args[x - 1].onchange();
+ 	}
+ 	ZPCalc.prototype.stop = function () {
+ 		for(x = 0; x < this.args.length; x++) {
+ 			this.args[x].onchange = "";
+ 		}
+ 	}
+ 	var calc = new ZPCalc(document.getElementById("worker"), document.getElementById("dol"), document.getElementById("worktime"), document.getElementById("bonus2"), document.getElementById("bonus3"), document.getElementById("bonus4"), document.getElementById("bonus5"), document.getElementById("bonus9"), document.getElementById("bonus6"), document.getElementById("bonus7"), document.getElementById("bonus8"), document.getElementById("bonus10"), document.getElementById("bonus11") document.getElementById("zptotal"), "nocapitalize");
+ 	d </script>

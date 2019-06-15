@@ -1,0 +1,15 @@
+.GCBoard {
+  table-layout:    fixed;
+  border-collapse: collapse;
+}
+
+.GCBoardCell {
+  background-color: #d0d8d0;
+  width:            20px;
+  height:           20px;
+  border:           1px solid white;
+}
+
+.GCBoardTest {
+  background-color: #303830
+}

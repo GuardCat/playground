@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html><head>
+  <meta charset="utf-8" />
+  <title></title>
+</head>
+<body>
+
+<script>
+/**
+  Класс «массив функций». 
+    Принимает один аргумент: функцию или
+  массив функций.
+    Игнорирует безымянные функции.
+*/
+  
+function FuncArray( list ) {
+  this._list = [ ];
+  this.addFunctions( ( list instanceof Array ) ? list : arguments );
+}
+
+FuncArray.prototype = {
+
+  _isRight: function( func ) {  // проверяет функции на валидность
+    if ( !( ( typeof func ) === "function") ) return false;
+    if ( !( func.name ) ) return false;
+    return true; 
+  },
+
+  _filter: function( list ) {
+    if ( !list.length ) return list;
+    return Array.prototype.filter.call( list, this._isRight );
+  },
+
+  getFuncIdByName: function( name ) {
+    for (var x = 0; x < this._list.length; x++) {
+      if ( !(x in this._list)) continue;
+      if (this._list[x].name === name) return x; 
+    }
+    return -1;
+  },
+
+  addFunctions: function( list ) {
+    var filteredList = this._filter( list );
+    if ( !filteredList.length ) return false;
+    this._list.push.apply(this._list, filteredList );
+  },
+
+  getFuncByName: function( name ) {
+    var id = this.getFuncIdByName( name );
+    if ( id === -1) return false;
+    return this.getFuncById( id );
+  },
+
+  getFuncById: function( id ) {
+    if ( !(id in this._list) ) return false;
+    return this._list[id];
+  },
+
+/**
+  Удаляет одну функцию. Принимает или порядковый номер
+  в формате number или строку с именем функции.
+*/
+delFunc: function( idOrName ) {
+    if ( ! ( ( typeof idOrName ) === "number" ) ) idOrName = this.getFuncByName( idOrName );
+    if ( idOrName in this._list ) return delete this._list[idOrName];
+    return false;
+  },
+
+  length: function() {
+    return this._list.length
+  }
+
+}
+
+FuncArray.prototype.constructor = FuncArray;
+
+// Проверим работу класса. Насоздаём разносортных функций.
+arr1 = [
+  function test(x) { alert(x) },
+  function doublex(x) { alert( x * 2 ) },
+  function pow(x) {alert( x * x ) },
+  function doublePow(x) { alert( x * x * 2 ) }
+];
+
+arr2 = [
+  function megaPow(x) { alert( "Мега павер * " + x ) },
+  function testTwo() { alert( "wassup?" ) }
+]
+
+function triplePow(x) { alert( x * x * 3 ) }
+var testanonimous = function() { alert(1) } // анонимная функция
+
+// Создадим экземпляр класса
+fArr = new FuncArray( arr1 );       // Передаём конструктору массив функций
+fArr.addFunctions( triplePow );     // Добавим функцию единственным аргументом.
+fArr.addFunctions( arr2 );          // Добавим функции массивом
+
+fArr.getFuncByName("test")(2)       // Запустим функцию по имени
+fArr.delFunc(0)                     // Удалим функцию по номеру
+alert( fArr.getFuncByName("test") ) // false --- Нет такой
+fArr.getFuncById(5)()               // Запустим функцию по номеру
+
+// Проверим, добавится ли анонимная функция
+alert( "length: " + fArr.length() ); // 6
+fArr.addFunctions( testanonimous );
+alert( "length: " + fArr.length() ); // 6  --- не добавилась
+
+</script> </body> </html>

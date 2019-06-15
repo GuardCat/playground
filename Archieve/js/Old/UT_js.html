@@ -1,0 +1,127 @@
+<html>
+<head>
+<title>Classes</title>
+<HTA:APPLICATION  APPLICATIONNAME="Ultimate tester"  ID="UT"  VERSION="0.01 work"  INNERBORDER="no"  SCROLL="no"/>
+<script type="text/javascript">
+//---------| Зона скриптов | ---------
+window.onload = function () {
+  var menu = new Menu(["Файл","Правка","Вид","Формат"]);
+}
+
+function Menu(Arr){
+  this.el=null; this.menuBaseHeight=20;
+  this.baseColor="buttonface";
+  this.menuCount=0;
+  this.itemsCount=0;
+  this.widthForDiv=0;
+  this.setStyle = function(){
+    with (this.el.style) {
+      backgroundColor=this.baseColor;
+      color="black";
+      border="1px solid transparent";
+      borderBottom="1px solid black";
+      position="absolute";
+      top="0px"; left="0px";
+      width="110%";
+      padding="0px 0 0px 0";
+      fontFamily="Verdana";
+      fontSize="13px";
+//      zIndex="2";
+    }
+  }
+  
+  this.buttonClearStyle=function(){ //Вызывается из кнопки
+    with (this.style){
+      border="1px solid transparent";
+      backgroundColor="buttonface";
+    }
+  }
+  this.buttonMousedStyle=function(){ //Вызывается из кнопки
+    with (this.style){
+      border="1px solid black";
+      borderBottom="1px solid b0b0ff";
+      backgroundColor="b0b0ff";
+    }
+  }
+  //Рисуем плашку
+  this.el=document.createElement("div");
+  this.setStyle();
+  this.el.style.height=this.menuBaseHeight;
+//  this.el.style.zIndex="-3";
+  this.el.id="menuBase";
+  this.el.hideAll=function() {
+    for (x=0;x<10;x++) {
+      try{
+        document.getElementById(x + ".").style.visibility="hidden";
+      } catch(e) {}
+    }
+  }
+  document.body.appendChild(this.el);
+
+  // Выставляем кнопки на плашку
+  for (x=0;x<Arr.length;x++){
+    this.el=document.createElement("input");
+    this.setStyle();
+    with (this.el.style){
+      width=Arr[x].length*12 + "px";
+      height=this.menuBaseHeight;
+      position="";
+      top="";  left="";
+      borderBottom="1px solid transparent";
+      marginTop="1px";
+    }
+    this.el.type="button";
+    this.el.value=Arr[x];
+    this.el.height=this.menuBaseHeight;
+    // клик по корневому пункту
+    this.el.onclick=function(){
+      var tmp=document.getElementById
+        (this.id + ".").style.visibility
+      ;
+      document.getElementById("menuBase").hideAll();
+      if (tmp=="hidden"){
+        document.getElementById(this.id + ".").style.visibility="visible";
+      }  
+      this.blur();
+    }
+    this.el.onmouseover=this.buttonMousedStyle;
+    this.el.onmouseout=this.buttonClearStyle;
+    this.el.id=x;
+    document.getElementById("menuBase").appendChild(this.el);
+    // Добавляем поля подменю
+    this.el=document.createElement("div");
+    this.setStyle();
+    with (this.el.style){
+      top="1px"; padding="2 2 2 2";
+      textAlign="center";
+      left=this.widthForDiv;
+      border="1px solid black";
+      width=""; visibility="hidden";
+     zIndex="3";
+    }
+    this.el.onmouseout=document.getElementById("menuBase").hideAll;
+    this.el.id=x + ".";
+    this.el.innerHTML="<p>"+Arr[x]+"</p><hr>";
+    document.getElementById("menuBase").appendChild(this.el);
+    this.menuCount++;
+    this.widthForDiv+=Arr[x].length*12;
+  }
+  
+  //this.addItem=function(id){ //Добавляем подменю}
+      
+}
+//---------| Конец зоны скриптов | ---------
+document.onkeypress = function () {
+  switch (self.window.event.keyCode){
+    case 27:
+      self.close();
+      break
+  }
+}
+</script>
+<style type="text/css">
+</style>
+</head>
+<body bgcolor="buttonface">
+</body>
+</html>

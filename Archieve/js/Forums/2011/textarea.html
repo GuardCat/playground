@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv = "content-type" content = "text/html;charset=windows-1251">
+	</head>
+	<body>
+		<textarea></textarea>
+		<textarea></textarea>
+		<textarea></textarea>
+		<textarea></textarea>
+		<textarea></textarea>
+		<script type="text/javascript">
+			/*
+					Функция setEventForEach устанавливает обработчик для каждого элемента
+				в переданном ей массиве. Принимает: массив элементов, тип события, обработчик,
+				аргументы для обработчика.
+			*/
+			function setEventForEach(elements, event, handler){
+				var x, args = Array.prototype.slice.call(arguments, 3);
+				for (x = 0; x < elements.length; x++) {
+					elements[x][event] = (function (args){
+						return function () {
+							handler.apply(this, args);
+						}
+					})(args);
+				}
+			}
+			function loggValue(txt1, txt2) { // Тестовый обработчик.
+				console.log(this.value + txt1 + txt2);
+			}
+			setEventForEach (document.getElementsByTagName("textarea"), "onkeyup", loggValue, " Аргументы для функции-обработчика.", " В любом количестве.");
+
+		</script>
+	</body>
+</html>

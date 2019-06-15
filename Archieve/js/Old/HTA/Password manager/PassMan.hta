@@ -1,0 +1,948 @@
+<HTML>
+<HEAD>
+   <HTA:APPLICATION
+  APPLICATIONNAME="Менеджер паролей" ID="PassMan" VERSION="v2.15"
+  BORDER="dialog" INNERBORDER="no" ICON="Data\main.ico"
+  SCROLL="no" SCROLLFLAT="yes" SINGLEINSTANCE="yes" CONTEXTMENU="no"/>
+   
+<SCRIPT type="text/vbscript">
+'++++++++++++++++++++++++++++++++++++ | Start Scripts | ++++++++++++++++++++++++++++++++
+	Option Explicit '«»
+	Dim WWidth, WHeight, WXpos, WYpos,RightPassword, fso, stopFactor, Intervarius, RMenus
+	Dim selectedIs, TempString, wsh,helpSeen,algoName, ChanCatNow,titleText:selectedIs=0
+	Dim MainTable(3,4096)	' Таблица: Категория/Наименование/Содержание. В 0,0 храним верхний индекс строк. Порядковый номер является значением для селекта итемсов.
+	Dim CatTable (100)		' Таблица категорий. Порядковый номер является значением для селекта категорий.
+	Dim DotTable(100)		' Таблица шаблонов для категорий. А вот неплохо бы переделать её инициализацию через редим.
+ 	stopFactor=False:ChanCatNow=False
+	helpSeen=False:algoName="GC5"
+	RMenus="RMUI,RMCat,RMTxt"
+	Set fso = CreateObject("Scripting.FileSystemObject")
+	Set wsh = CreateObject("Wscript.Shell")
+  
+'------------------------	| Всякие настройки. Здесь можно трогать руками. |	---------------
+	WWidth=		800
+	WHeight=	500
+	WXpos=		(screen.availWidth-WWidth)/2
+	WYpos=		(screen.availHeight-WHeight)/2
+'------------------------	| Дальше руками трогать не рекомендуется. | ---------------	
+
+	Sub window_onload ' Открытие окна программы 
+		'Переставляем и переразмеряем окно
+		moveTo WXpos, WYpos
+		resizeTo WWidth, WHeight
+		'Запрос пароля
+		If fso.FileExists("Data\Data.PMN") Then
+			RightPassword=RTrim(LTrim(InputBox("Введите ключ для чтения данных.","Ввод пароля")))
+		Else
+			FirstStart
+		End If
+		titleText=PassMan.APPLICATIONNAME & " " & PassMan.VERSION
+		document.title=titleText
+		If Len(RightPassword)>0 Then
+			ChangeForm("Tools,MainForm") 	'Отображаем рабочие формы
+			ReadTables 						'Наполняем таблицы
+			Categories_Refresh 				'Наполняем селекты	
+			GID("Categories").focus
+		Else
+			ShowMessage ("Работа без пароля невозможна.")
+			stopFactor=true
+		End If	
+	End sub
+	
+	Sub window_onResize
+		GID("SilentMessage").style.top=Self.document.body.offsetHeight-30 & "px"
+	End sub
+	
+	Sub FirstStart
+		If Not helpSeen Then
+			If confirm("Вывести справку по работе с программой (рекомендуется, если вы впервые здесь)?") Then
+				helpMe_onClick
+				helpSeen=true
+			End If
+		End if
+		RightPassword=RTrim(LTrim(InputBox("Введите ключ, которым будут защищены ваши данные. Не менее 4х символов, пожалуйста. Пробелы в начале и конце ключа игнорируются.", "Создание нового пароля")))
+		If Len(RightPassword)=0 Then
+			MsgBox "Невозможно создание беспарольной базы данных.",vbCritical,"Предупреждение перед закрытием"
+			stopFactor=True
+			Self.close
+		Else
+			If Len (RightPassword)<4 Then 
+				MsgBox "Введите ключ, который не короче четырёх символов.", vbExclamation, "Неподходящий ключ"
+				FirstStart
+			End If
+		End if
+	End sub
+	
+	Sub Categories_onChange()' Пользователь поменял категорию
+		If ChanCatNow Then Exit Sub 'Если производится перенос записи в другую категорию, то ничего не делать
+		Dim Item,x
+		
+  		GID("UserItems").options.length=0 'Очистить поле записей
+		For x=1 To MainTable(0,0) 'Наполнение записей в соответствии с выбранной категорией
+			If MainTable(1,x)=GID("Categories").value Then
+				Set Item = document.createElement("OPTION")
+				Item.value=x
+				Item.text=MainTable(2,x)
+				GID("UserItems").Options.Add Item
+			End If
+		Next
+  		Set Item=Nothing
+		If Not GID("Categories").selectedIndex=-1 Then ' Если есть выбранная категория
+			GID("UserText").value=DotTable(GID("Categories").value)	' отобразить шаблон
+			GID("UserTextLabel").innerHTML="Шаблон для категории «"&lakonia(CatTable(GID("Categories").value),60)&"»" ' и вывести заголовок
+		Else
+			GID("UserTextLabel").innerHTML="Выберите категорию для просмотра и изменения шаблона" ' Если категория не выбрана, отобразить стандартное приглашение
+		End If
+	End Sub
+	
+	Sub ChanCat_onclick 'Перенос записи (событие и подготовка контролов)
+		If GID("UserItems").selectedIndex = -1 Then 
+			MsgBox "Вначале кликните запись.", vbExclamation, "Ошибка"
+			Exit Sub
+		End if
+		ShowMessage lakonia("Кликните в категорию, куда следует перенести запись «" & MainTable(2,GID("UserItems").value) & "».",80)
+		status=GID("UserItems").style.width
+		GID("UserItems").style.width="0%"
+		GID("tdItems").style.width="0%"
+		GID("UserItems").style.visibility="hidden"
+		GID("UserText").style.visibility="hidden"
+		GID("Tools").style.visibility="hidden"
+		GID("ZP").style.visibility="hidden"
+		GID("tdCat").style.width=WWidth-20&"px"
+		GID("CT").innerHtml="Переместить запись «" & lakonia(MainTable(2,GID("UserItems").value),25)&"» в категорию:"
+		GID("UserTextLabel").style.visibility="hidden"
+		ChanCatNow=true
+	End Sub
+	
+	Sub Categories_onclick 'Перенос записи в другую категорию (механизм)
+		If ChanCatNow Then
+			If GID("Categories").selectedIndex<>-1 Then
+				GID("UserItems").style.visibility="visible"
+				GID("UserText").style.visibility="visible"
+				GID("Tools").style.visibility="visible"
+				MainTable(1,GID("UserItems").value)=GID("Categories").value
+				Categories_Refresh
+				Categories_onChange 
+				GID("ZP").style.visibility="visible"
+				GID("UserText").value=""
+				GID("UserItems").style.width=status:status=""
+				GID("tdCat").style.width="30%"
+				GID("tdItems").style.width="70%"
+				GID("UserTextLabel").style.visibility="visible"
+				GID("CT").innerHtml="Категории"
+				ShowMessage ""
+				ChanCatNow=false
+			End If
+		End If
+	End sub	
+
+	Sub Categories_onDblClick
+		AddCat_onclick
+	End Sub
+	
+	Sub UserItems_onDblClick
+		Add_Onclick
+	End Sub
+	
+	Sub DelAllEntries ' Удаляем все записи из категории
+		Dim x
+		For x= MainTable(0,0) To 1 Step -1
+			If MainTable(1,x)=GID("Categories").value Then
+				DelEntry(x)
+			End If
+		Next
+	End Sub
+	
+	Sub Tools_onclick
+		HideRM RMenus
+	End Sub
+
+	Sub UserItems_onchange ' Сменилась запись
+		Dim x
+		If MainTable(3,GID("UserItems").value)="" Then
+			GID("UserText").value=DotTable(GID("Categories").value)
+		Else
+			GID("UserText").value=mainTable(3,GID("UserItems").value)
+		End If
+		GID("UserTextLabel").innerHTML=lakonia(MainTable(2,GID("UserItems").value),70)&":"
+	End sub
+	
+	' Отлавливаем изменения в тексте записи или шаблона
+	Sub UserText_onBlur
+		SaveText
+	End Sub
+	Sub UserText_onchange
+		SaveText
+	End Sub
+	Sub UserText_onclick
+		HideRM RMenus
+	End Sub
+	
+	Sub UserText_onmousedown
+		HideRM RMenus
+		If window.event.button=2 Then
+			GID("RMTxt").style.top=window.event.y
+			GID("RMTxt").style.left=window.event.x
+			GID("RMTxt").style.visibility="visible"
+		End If	
+	End Sub
+	
+	Sub RMTxt_onclick
+		HideRM RMenus
+	End sub
+	
+	Sub CopyText_onclick
+		Self.window.clipboardData.setData "Text", Self.window.document.selection.createRange.text
+		ShowTimeMessage "Текст «" & lakonia (Self.window.document.selection.createRange.text, 80) & "» скопирован в буфер обмена.", 3000
+	End Sub
+	Sub InsertText_onclick
+		GID("UserText").focus
+		Self.window.document.selection.createRange.text = window.clipboardData.getData ("Text")
+	End Sub
+	
+	Sub SaveText 'Переносим текст в таблицу записей или шаблонов
+		If GID("UserItems").selectedIndex<>-1 And Len(GID("Usertext").value)>0 then
+			MainTable(3,GID("UserItems").value)=GID("UserText").value
+		Else
+			If GID("Categories").selectedIndex<>-1 Then
+				DotTable(GID("Categories").value)=GID("UserText").value
+			End If
+		End if
+	End Sub
+
+	Sub SaveAll 'Сохраняем данные таблиц
+		Dim base,x
+		Set base=fso.CreateTextFile("Data\Data.PMN")
+		base.WriteLine algoName 
+		' Сохраняем категории
+		base.WriteLine CatTable(0) 
+		For x=1 To CatTable(0)
+			base.writeline Crypt(CatTable(x))
+		Next
+		' Сохраняем пользовательские данные
+		base.WriteLine MainTable(0,0)
+		For x=1 To MainTable(0,0)
+			base.writeline Crypt(MainTable(1,x))
+			base.writeline Crypt(MainTable(2,x))
+			base.writeline Crypt(Replace(Replace(MainTable(3,x),Chr(13),Chr(1)),Chr(10),Chr(2)))
+		Next
+		'Сохраняем шаблоны категорий
+		For x=1 To CatTable(0)
+			base.writeline Crypt(Replace(Replace(DotTable(x),Chr(13),Chr(1)),Chr(10),Chr(2)))
+		Next
+		ShowTimeMessage "Все изменения сохранены.",3000	
+	End Sub 
+
+	Sub ReadTables 'Читает инфо в таблицы.
+		Dim base,x,tmp
+		ShowMessage "Загрузка и расшифровка данных..."
+		On Error Resume Next
+		Set base=fso.OpenTextFile("Data\Data.PMN",1)
+		If Not TestRight Then Exit Sub
+		'Разбираемся с алгоритмом кодирования
+		tmp=base.ReadLine
+		If Left(tmp,2)="GC" Then
+			CatTable(0)=base.ReadLine
+		Else
+			CatTable(0)=tmp
+			tmp="GC-3"
+		End If
+		If tmp<>algoName Then
+			MsgBox "Данные зашифрованы с помощью устаревшего алгоритма «" & tmp & "». Программа автоматически изменит алгоритм кодирования данных на «" & algoName & "».",vbInformation,"Уведомление"
+		End If
+		' Читаем категории
+		For x=1 To CatTable(0)
+			CatTable(x)=DeCrypt(base.ReadLine,tmp)
+			If Not TestRight Then Exit Sub
+		Next
+		' Читаем пользовательские данные
+		MainTable(0,0)=base.ReadLine
+		For x=1 To MainTable(0,0)
+			MainTable(1,x) = DeCrypt(base.ReadLine,tmp)
+			MainTable(2,x) = DeCrypt(base.ReadLine,tmp)
+			MainTable(3,x) = Replace (Replace(DeCrypt(base.ReadLine,tmp),Chr(1),Chr(13)), Chr(2),Chr(10))
+			If Not TestRight Then Exit Sub
+		Next
+		'Читаем шаблоны категорий
+		For x=1 To CatTable(0)
+			DotTable(x)=Replace(Replace(DeCrypt(base.ReadLine,tmp),Chr(1),Chr(13)),Chr(2),Chr(10))
+			If Not TestRight Then Exit Sub
+		Next
+		ShowMessage ""
+		ShowCountInTitle
+	End Sub
+	
+	Sub SilentMessage_onclick
+		ShowMessage("")
+	End Sub
+
+	Sub ShowCountInTitle
+		document.title=titleText & " | Записей в БД:" & MainTable(0,0) & " | "	
+	End Sub
+	
+	Sub window_onbeforeunload() 'Закрытие окна программы
+		SaveText
+		If stopFactor Then Exit sub
+		If CatTable(0)=0 Then 
+			If fso.FileExists("Data\Data.PMN") Then
+				If confirm("Данные в рабочем окне отсутствуют. Сохранение уничтожит файл базы данных. Сделать это? (Ответ нет предполагает откат базы до состояния предыдущего сохранения).") Then
+					fso.DeleteFile "Data\Data.PMN"
+				End If
+			End If
+		Else
+			SaveAll
+		End if
+		Set fso=nothing
+	End Sub
+	
+' Панель инструментов	
+	Sub DelIt_onclick 'Удаление выбранной записи
+		Dim x
+		If GID("UserItems").selectedIndex =-1 Then
+			MsgBox "Вначале кликните нужную запись левой кнопкой мыши.", vbExclamation, "Ошибка":Exit Sub
+		End If
+		If confirm("Удалить запись «" & lakonia(MainTable(2,GID("UserItems").value),120)&"»?") then
+			status=MainTable(2,GID("UserItems").value)
+			DelEntry(GID("UserItems").value)
+			ShowTimeMessage "Запись «" & lakonia(status,60) & "» успешно удалена.", 3000
+			status=""
+		End If
+	End Sub
+	
+	Sub DelEntry(StartIndex)' Удалятор записей. Сдвигает на место удалённой все последующие записи и уменьшает счётчик на единицу.
+		Dim x
+		If startindex=MainTable(0,0) Then
+			MainTable(1,startindex)=""
+			MainTable(2,startindex)=""
+			MainTable(3,startindex)=""
+		Else			
+			For x=StartIndex To MainTable(0,0)-1
+				MainTable(1,x)=MainTable(1,x+1)
+				MainTable(2,x)=MainTable(2,x+1)
+				MainTable(3,x)=MainTable(3,x+1)
+			Next
+		End If
+		MainTable(0,0)=MainTable(0,0)-1
+		GID("UserText").value=""
+		selectedIs=gid("Categories").value
+		CategoryRefresh(GID("Categories").value)
+		Categories_onChange
+		ShowCountInTitle
+	End Sub
+		
+	Sub DelAll_onclick' Очистка выбранной категории
+		If GID("Categories").selectedIndex =-1 Then
+			MsgBox "Вначале кликните нужную категорию левой кнопкой мыши.", vbExclamation, "Ошибка":Exit Sub
+		End If
+		If confirm("Удалить все записи в категории «"&CatTable(GID("Categories").value)&"»?") then
+			DelAllEntries
+			Categories_Refresh
+			Categories_onchange
+		End If
+	End Sub
+	
+	Sub Add_onClick ' Добавляем запись
+		Dim n,txt,Item
+		If GID("Categories").selectedIndex =-1 Then
+			MsgBox "Вначале кликните нужную категорию левой кнопкой мыши.", vbExclamation, "Ошибка":Exit Sub
+		End If
+		MainTable(2,MainTable(0,0)+1)=InputBox ("Введите название записи (например, адрес сайта или почтового сервера, наименование банковской карты и т.д.)","Создание записи")
+		If len(MainTable(2,MainTable(0,0)+1))>0 Then
+			MainTable(0,0)=MainTable(0,0)+1
+			MainTable(1,MainTable(0,0))=GID("Categories").value
+			MainTable(3,MainTable(0,0))=DotTable(GID("Categories").value)
+			CategoryRefresh(GID("Categories").value)
+		End If
+		ShowCountInTitle
+	End sub
+
+	Sub RenMe_onclick 'Переименовываем запись
+		Dim tmp
+		If GID("UserItems").selectedIndex =-1 Then
+			MsgBox "Вначале кликните нужную запись левой кнопкой мыши.", vbExclamation, "Ошибка":Exit Sub
+		End If
+		tmp=InputBox("Введите новое название записи","Переименование записи",MainTable(2,GID("UserItems").value))
+		If Len(tmp)>0 Then MainTable(2,GID("UserItems").value)=tmp:Categories_onchange
+	End Sub
+	
+	Sub RenCat_onclick 'Переименовываем категорию
+		Dim tmp
+		If GID("Categories").selectedIndex =-1 Then
+			MsgBox "Вначале кликните нужную категорию левой кнопкой мыши.", vbExclamation, "Ошибка":Exit Sub
+		End If
+		tmp=inputbox("Введите новое название категории", "Переименование категории",CatTable(GID("Categories").value))
+		If Len(tmp)>0 Then CatTable(GID("Categories").value)=tmp:Categories_Refresh
+	End Sub
+	
+	Sub AddCat_onClick 'Добавляем категорию
+		Dim tmp
+		tmp=InputBox("Введите название новой категории","Создание категории","")
+		If Len(tmp)>0 Then
+			CatTable(0)=CatTable(0)+1
+			CatTable(CatTable(0))=tmp
+			Categories_Refresh
+		End If
+	End sub
+	
+	Sub DelCat_onclick 'Удаляем категорию
+		Dim x,y
+		If GID("Categories").selectedIndex=-1 Then MsgBox "Вначале выберите категорию.",vbExclamation, "Ошибка":Exit Sub
+		status=CatTable(GID("Categories").value)
+		If confirm("Действительно удалить категорию «" & lakonia(status,120) & "» и все записи в ней?") Then
+			DelAllEntries 'Удаляем все записи из категории
+			For y=1 To MainTable(0,0) ' Сдвигаем все записи, с номером категории большим номера удалённой категории уменьшаем на единицу
+				If MainTable(1,y)>GID("Categories").value Then 
+					MainTable(1,y)="" & (MainTable(1,y)-1)
+				End if
+			Next
+			For x=GID("Categories").value To CatTable(0)-1 ' Сдвигаем на место удаляемой категории все последующие категории. То же делаем и с шаблонами категорий.
+				CatTable(x)=CatTable(x+1)
+				DotTable(x)=DotTable(x+1)
+			Next
+			CatTable(0)=CatTable(0)-1
+			CatTable(CatTable(0)+1)=""
+			Categories_Refresh
+			GID("UserText").value=""
+			ShowTimeMessage "Категория «" & lakonia(status,60) & "» успешно удалена.", 3000
+			status=""
+		End If
+	End Sub
+	
+	Sub ChangePass
+		Dim tmp, reason, stopIt:stopIt=False
+		tmp=ltrim(rtrim(InputBox ("Введите новый ключ. Помните, забытый ключ невозможно восстановить. Регистр важен. Пробелы в начале и конце игнорируются.","Изменение ключа")))
+		If Len(tmp)<4 Then stopIt=True:reason="введённый пользователем ключ содержит меньше четырёх символов."
+		If len(tmp)=0 Then stopIt=True:reason="пользователь отменил операцию или ничего не ввёл в поле запроса."
+		If tmp=RightPassword Then stopIt=True:reason="введённый пользователем ключ идентичен действующему."
+		If Not stopIt Then
+			RightPassword=Rtrim(Ltrim(tmp))
+			SaveAll
+			ShowTimeMessage "Пароль был успешно изменён.", 3000
+		Else
+			ShowTimeMessage "Пароль не был изменён, потому что " & reason, 4000
+		End If
+	End sub
+	
+	Sub noSave_onclick
+		If confirm("Действительно выйти из программы, не сохраняя изменения, которые были внесены с момента последнего сохранения?") Then
+			stopFactor=True
+			close
+		End If
+	End sub		
+'----------------------------------| Селекты в таблицы и обратно |------------
+	Sub Categories_Refresh() 'Категории из таблицы в селект
+		Dim x, Item
+		GID("Categories").Options.Length=0
+		For x=1 To CatTable(0)
+			Set Item = document.createElement("OPTION")
+			Item.value=x
+			Item.text= CatTable(x) & " (" & EntriesInCategory(x) & ") " 
+			Item.id="Cat" & x
+			GID("Categories").Options.Add Item
+		Next
+  	End Sub
+		
+  	Sub CategoryRefresh(n) 'Категории из таблицы в селект (механизм)
+  		Dim Item
+		Set Item=document.createElement("Option")
+			Item.text = CatTable(n)& " (" & EntriesInCategory(n) & ")"
+			Item.value = n
+			Item.selected=True
+		GID("Categories").Options.add Item,n-1
+		GID("Categories").options.remove(n)
+		Categories_onchange
+	End Sub
+	
+'------------------------------------ | Function's zone | ----------------------------
+
+	Function GID(ID)' Упрощает работу с элементами по ID
+		Set GID=document.getElementById(ID)
+	End Function
+	
+	Function lakonia(text,size)
+		If Len(text)>size Then 
+			lakonia=Left(text,size)&"..."
+		Else
+			lakonia=text
+		End if
+	End function
+	
+	Function TestRight 'Проверка на возникновение ошибки. В случае незарегистрированной ошибки закрывает всё. Иначе возвращает true
+		TestRight=False
+		Select Case Err.Number
+			Case 0
+				TestRight=True
+				Exit function
+			Case 53
+				TestRight=53
+				LoadAutoDots
+				MainTable(0,0)=0
+				ShowTimeMessage "Будет создан новый файл базы данных.", 5000
+				Err.Clear
+			Case Else
+				MsgBox "Произошла ошибка: " & Err.Description & "(Номер: " & Err.Number&")" & Chr(13)&Chr(10)&"Возможно, повреждён или изменён кривыми руками файл базы данных программы. Программа будет закрыта. Для накопления новой БД, удалите файл «Data\Data.PMN».", vbCritical, "Ошибка"
+				close
+		End Select
+	End function
+	
+	Function EntriesInCategory(categoryNumber)' Возвращает число записей в запрошенной категории
+		Dim x:EntriesInCategory=0: On Error Resume Next
+		For x=1 To MainTable(0,0)
+			If MainTable(1,x)="" & categoryNumber Then EntriesInCategory=EntriesInCategory+1
+		Next
+		Err.Clear
+	End function
+			
+	Function iif(byRef Test, truePart, falsePart) 
+		If Test Then
+			iif=truePart		
+		Else
+			iif=falsePart
+		End If
+	End function
+	
+	Function Crypt (Text)' Алгоритм GC5
+		On Error resume Next
+		Randomize Timer
+		Dim x,FactorTwo,y, n:n=1
+		For x=1 To Len(RightPassword)
+			FactorTwo=0+FactorTwo Xor Asc(Mid(RightPassword,x,1))
+		Next
+		For x=1 To Len(Text)
+			Crypt=Crypt & (0+((Asc(Mid(text,x,1)) Xor Asc(Mid(RightPassword,n,1))) Xor FactorTwo)) &"/"
+			For y=1 To Mid(Asc(Mid(RightPassword,n,1)),2,1)
+				Crypt=Crypt & Round(Rnd*(0+((Asc(Mid(text,x,1)) Xor Asc(Mid(RightPassword,n,1))) Xor FactorTwo))) &"/"
+			Next
+			n=n+1
+			If n>Len(RightPassword) Then n=1
+		Next
+		Crypt=left(Crypt,Len(Crypt)-1)
+	End Function
+	
+	Function DeCrypt (Text,alg)
+		On Error resume Next
+		Dim x, n, mass, element, T, y,falseSym,FactorTwo:n=1
+		Select Case alg 'Выбор алгоритма для чтения базы
+			Case "GC-3"  
+				mass=Split(Text,"/")
+				For x=1 To Len(RightPassword)
+					FactorTwo=FactorTwo+Asc(Mid(RightPassword,x,1))
+					If x>Len(RightPassword)/2 Then FactorTwo=Int(FactorTwo/2)
+				Next
+				For x=0 To UBound(mass)
+					T = mass(x)-Asc(Mid(RightPassword,n,1))-FactorTwo 
+					TestKey(T):If stopFactor=True Then Exit Function
+					DeCrypt=DeCrypt & Chr(T)
+					If ev(Asc(Mid(RightPassword,n,1))) Then	x=x+1
+					n=n+1
+					If n>Len(RightPassword) Then n=1
+				Next
+			Case "GC3+"
+				mass=Split(Text,"/")
+				For x=1 To Len(RightPassword)
+					FactorTwo=FactorTwo+Asc(Mid(RightPassword,x,1))
+					If x>Len(RightPassword)/2 Then FactorTwo=Int(FactorTwo/2)
+				Next
+				For x=0 To UBound(mass)
+					T = mass(x)-Asc(Mid(RightPassword,n,1))-FactorTwo 
+					TestKey(T):If stopFactor=True Then Exit Function
+					DeCrypt=DeCrypt & Chr(T)
+					If ev(Asc(Mid(RightPassword,n,1))) Then
+						For y=1 To Mid(Asc(Mid(RightPassword,n,1)),2,1)
+							x=x+1
+						Next
+					End if
+					n=n+1
+					If n>Len(RightPassword) Then n=1
+				Next
+			Case "GC4"
+				mass=Split(Text,"/")
+				For x=1 To Len(RightPassword)
+					FactorTwo=FactorTwo+Asc(Mid(RightPassword,x,1))
+					If x>Len(RightPassword)/2 Then FactorTwo=Int(FactorTwo/2)
+				Next
+				For x=0 To UBound(mass)
+					T = mass(x) Xor Asc(Mid(RightPassword,n,1)) Xor FactorTwo 
+					TestKey(T):If stopFactor=True Then Exit Function
+					DeCrypt=DeCrypt & Chr(T)
+					If ev(Asc(Mid(RightPassword,n,1))) Then
+						For y=1 To Mid(Asc(Mid(RightPassword,n,1)),2,1)
+							x=x+1
+						Next
+					End if
+					n=n+1
+					If n>Len(RightPassword) Then n=1
+				Next
+			Case "GC4+"
+				mass=Split(Text,"/")
+				For x=1 To Len(RightPassword)
+					FactorTwo=0+FactorTwo Xor Asc(Mid(RightPassword,x,1))
+				Next
+				For x=0 To UBound(mass)
+					T = mass(x) Xor Asc(Mid(RightPassword,n,1)) Xor FactorTwo 
+					TestKey(T):If stopFactor=True Then Exit Function
+					DeCrypt=DeCrypt & Chr(T)
+					If ev(Asc(Mid(RightPassword,n,1))) Then
+						For y=1 To Mid(Asc(Mid(RightPassword,n,1)),2,1)
+							x=x+1
+						Next
+					End if
+					n=n+1
+					If n>Len(RightPassword) Then n=1
+				Next
+			Case algoName
+				mass=Split(Text,"/")
+				For x=1 To Len(RightPassword)
+					FactorTwo=0+FactorTwo Xor Asc(Mid(RightPassword,x,1))
+				Next
+				For x=0 To UBound(mass)
+					T = mass(x) Xor Asc(Mid(RightPassword,n,1)) Xor FactorTwo 
+					TestKey(T):If stopFactor=True Then Exit Function
+					DeCrypt=DeCrypt & Chr(T)
+					For y=1 To Mid(Asc(Mid(RightPassword,n,1)),2,1)
+						x=x+1
+					Next
+					n=n+1
+					If n>Len(RightPassword) Then n=1
+				Next
+			Case Else
+				MsgBox "Неизвестный алгоритм кодирования базы. Или вы используете устаревшую версию программы или файл данных редактировался вне программы. Программа будет закрыта.",vbCritical,"Ошибка"
+				stopFactor=True
+				close
+			End Select
+	End Function
+	
+	Sub TestKey(T)
+		If T<1 Or T>255 Then
+			MsgBox "Введённый пароль не является ключом.", vbCritical, "Ошибка" & T
+			stopFactor=True
+			window.close
+		End If
+	End sub
+
+	Function ev(x)
+		If Not IsNumeric(x) Or x/2<>x\2 Then
+			ev=False
+		Else
+			ev=True			
+		End If
+	End function
+
+' ------------------------------------ | Всякие вспомогательные штуки | ----------------------------
+	Sub HideRM(Text) 'Скрывает все контекстные меню
+		Dim r,x
+		r=Split(Text,",")
+		For Each x In r
+			GID(x).style.visibility="hidden"
+		Next
+	End sub
+
+	Sub LoadAutoDots 'Загружает автошаблоны в программу
+		CatTable(1)= "Сайты и форумы"
+		DotTable(1)= " Логин: " & Chr(10)& Chr(13) &"Пароль: "
+		CatTable(2)= "Почтовые сервера"
+		DotTable(2)= "Адрес почты: " & Chr(10)& Chr(13) & "      Логин: " & Chr(10)& Chr(13) &"     Пароль: "
+		CatTable(3)= "Банковские карты"
+		DotTable(3)="                 Банк: "& Chr(10)& Chr(13) &"          Номер карты: "& Chr(10)& Chr(13) &"         Действует до: "& Chr(10)& Chr(13) & "                  PIN: "& Chr(10)& Chr(13) &"     Код безопасности: "& Chr(10)& Chr(13) &"      Секретное слово: " & Chr(10)& Chr(13) &"Номер счёта (20 цифр): "
+		CatTable(4)="SIM-карты"
+		DotTable(4)="Номер телефона городской: " & Chr(10)& Chr(13) &"             Федеральный: " & Chr(10)& Chr(13) &"                    PIN1: " & Chr(10)& Chr(13) &"                    PUK1: " & Chr(10)& Chr(13) &"                    PIN2: " & Chr(10)& Chr(13) &"                    PUK2: " & Chr(10)& Chr(13) &"                     ICC: " & Chr(10)& Chr(13) &"    Номер лицевого счёта: " 
+		CatTable(0)=4
+	End Sub
+
+	Sub document_onKeyDown' Горячие клавиши (F)
+		Select case window.event.keyCode
+			Case 112
+				helpMe_onClick
+		End Select
+	End Sub
+	
+	Sub document_onKeyPress' Горячие клавиши
+		Dim x
+		Select case window.event.keyCode
+			Case 27 ' Esc
+				For Each x In Split (RMenus,",")
+					If GID(x).style.visibility="visible" Then
+						HideRM RMenus
+						Exit Sub
+					End If
+				Next
+				SaveText
+				close
+			Case 19 ' Ctrl + S
+				SaveAll
+			Case 23 'Ctrl + W
+				ChangePass
+			Case Else	
+		End select		
+	End Sub
+
+	Sub Swap(byRef a, byRef b)
+		Dim c
+		c=a:a=b:b=c
+		Set c=Nothing
+	End sub
+
+	Sub ShowMessage(text)' Показывает форму с текстом
+		Dim FMName: FMName="SilentMessage"
+		If Len(text)=0 Then 
+			GID(FMName).style.visibility="hidden"
+			Exit Sub
+		End If
+		GID(FMName).innerHTML=text
+		GID(FMName).style.visibility="visible"
+		clearInterval(Intervarius)
+	End Sub
+	
+	Sub ShowTimeMessage (text,milliseconds) ' Показывает сообщение на указанное количество миллисекунд
+		clearInterval Intervarius
+		ShowMessage text
+		Intervarius=setInterval ("ShowMessage("""")", milliseconds)
+	End Sub
+	
+	Sub ChangeForm(FormsNames)' Показатор/скрыватор форм
+	' Принимает данные в виде стринга, содержащего разделённые запятыми имена форм.
+		Dim Frms: On Error Resume next
+		For Each Frms In Split(FormsNames,",")
+			If document.forms(Frms).style.visibility="visible" Then
+				document.forms(Frms).style.visibility="hidden"
+			Else
+				document.forms(Frms).style.visibility="visible"
+			End If				
+		next
+		Err.Clear
+	End Sub
+	
+	Sub tester' Проверка алгоритмов кодирования/декодирования
+		tmp= Crypt("Съешь ещё этих мягких французских булок да выпей же чаю!")
+		alert tmp
+		RightPassword = prompt("Повтори пароль")
+		alert DeCrypt(tmp)
+	End sub
+'-----------------------------| Контекстные меню и хоткеи селектов | ------------------
+	Sub Categories_onMouseDown
+		HideRM RMenus
+		If window.event.button=2 Then
+			GID("RMCat").style.top=window.event.y
+			GID("RMCat").style.left=window.event.x
+			GID("RMCat").style.visibility="visible"
+		End If			
+	End Sub
+	Sub Categories_onKeyDown
+		Select Case window.event.keyCode
+			Case 45 'Insert
+				AddCat_Onclick
+			Case 46 'Delete
+				DelCat_Onclick
+			Case 113 'F2
+				RenCat_onclick
+			Case 39 ' Right arrow
+				GID("UserItems").focus
+		End select
+	End sub
+	Sub RMCat_onclick
+		HideRM RMenus
+	End Sub
+
+	Sub UserItems_onKeyDown
+		Select Case window.event.keyCode
+			Case 45
+				Add_Onclick
+			Case 46
+				DelIt_Onclick
+			Case 113
+				RenMe_onclick
+			Case 37 'Left arrow
+				GID("Categories").focus
+		End select
+	End sub
+	Sub UserItems_onmousedown
+		HideRM RMenus
+		If window.event.button=2 Then
+			GID("RMUI").style.top=window.event.y
+			GID("RMUI").style.left=window.event.x
+			GID("RMUI").style.visibility="visible"
+		End If	
+	End Sub
+	Sub RMUI_onclick
+		HideRM RMenus
+	End Sub
+
+	Sub helpMe_onClick
+		If fso.FileExists("Data\HelpMe.hta") Then
+			wsh.Run "DATA\helpMe.hta",,false 
+		Else
+			MsgBox "Файл справки, который должен находиться по адресу «Data\helpMe.hta» отсутствует. Возможно, он был злостно удалён врагами народа.", vbExclamation, "Невозможно открыть справку"
+		End if
+	End Sub
+	
+	Sub aboutMe_onClick
+		MsgBox passMan.applicationname & " " & passMan.version & " © GuardCat 2011" & Chr(10) & Chr(13) & "Программа для хранения текстовых данных в зашифрованном виде." & Chr(10) & Chr(13) & "Используется алгоритм «" & algoName & "». Подробнее — см. справку."& Chr(10) & Chr(13) & "Программа распространяется по универсальной общественной лицензии GNU GPL v3.0"  & Chr(10) & Chr(13) & "Текст лицензии см. по адресу: http://www.gnu.org/licenses/gpl.html", vbInformation, "О программе" 
+	End Sub
+'++++++++++++++++++++++++++++++++++++ | End Scripts | ++++++++++++++++++++++++++++++++
+</SCRIPT>
+
+<style type="text/css">
+div{font-family:	verdana;
+	color:			#000040;
+	font-size:		13;
+	font-weight:	regular;
+	margin:			0 0 2px 0
+}
+button{
+		background-color:	buttonface;
+		color:				000000;
+		border-width:		1px;
+		border-style:		solid;
+		border-color:		transparent;
+		font-family:		verdana;
+		font-size:			12;
+		margin:				0 0 0 2px;
+		height:				22px;
+}
+input{	background-color:	ffffff;
+		color:				000000;
+		border-width:		1px;
+		border-style:		solid;
+		border-color:		gray;
+		font-family:		verdana;
+		font-size:			13;
+}
+select{	background-color:	ffffff;
+		color:				000000;
+		font-family:		verdana;
+		font-size:			13;
+}
+form{	visibility:			hidden;
+		font-family:		verdana;
+		font-size:			13;
+}
+</style></HEAD>
+<BODY SCROLL="no" bgcolor="buttonface">
+<form id="Tools" style="width: 100%; height: 30px;margin: -12px 0 0 -10px"><!-- Верхнее меню -->
+	<nobr>
+	<button name="SaveMe"
+		style="background-color:buttonface;"
+		onmouseover="me.style.border='1px outset silver'"
+		onmouseout="me.style.borderColor='transparent':me.blur"
+		onclick="SaveAll"
+		title="Сохранить всё (Ctrl+S)"
+		>Cохранить
+	</button>
+	<button name="CPass"
+		style="background-color:buttonface;"
+		onmouseover="me.style.border='1px outset silver'"
+		onmouseout="me.style.borderColor='transparent':me.blur"
+		onclick="ChangePass" title="Сменить ключ (Ctrl+W)"
+		>Изменить ключ
+	</button>
+	<button name="noSave"
+		style="background-color:buttonface;width:174px"
+		onmouseover="me.style.border='1px outset silver'"
+		onmouseout="me.style.borderColor='transparent':me.blur"
+		title="Выйти из программы и не сохранять изменения, произведённые с момента последнего сохранения."
+		>Выйти без сохранения
+	</button>
+	<button name="helpMe" 
+		style="cursor: help;background-color:buttonface;"
+		onmouseover="me.style.border='1px outset silver'"
+		onmouseout="me.style.borderColor='transparent':me.blur"
+		title="Файл справки">Помощь
+	</button>
+	<p onclick="aboutMe_onClick"
+		style="	cursor:help;
+				position:absolute;
+				top:8px;left:550px;
+				font-family:Verdana;
+				font-size:10px;
+				font-weight:bold;
+				color:505050;
+		">© <font color=red>С</font>торожевой <font color=red>К</font>от 2011 GNU GPL v3.0
+	</p>
+	<hr size=2 style="width:120%;margin: -2px 0 0 -20px;">
+</form>
+
+<form id="MainForm"><!-- Главная форма -->
+	<table style="width:100%; margin: -20 0 0 0">
+		<tr style="text-align:left;color: 303030; font-family: verdana; font-size:14; font-weight:bold;">
+			<td id="CT">Категории
+			<td id="ZP">Записи
+		<tr>
+			<td style="width:30%;" id="tdCat"><select name="Categories" id="Categories" size=10 style="width: 100%;"></select>
+			<td style="width:70%;" id="tdItems"><select name="UserItems" id="UserItems" size=10 style="width: 100%; "></select><br>
+		<tr>
+			<td colspan=2 >
+				<div id="UserTextLabel" style="text-align:left; font-family: verdana; font-size:13px;font-weight:bold;width:100%;color:303030;"
+					>Выберите категорию для просмотра и изменения шаблона
+				</div>
+				<textarea style="width:100%; height: 200px; font-family: monospace; font-size: 16;" id="UserText" name="UserText"></textarea>
+	</table>
+<!-- Контекстное меню для категорий -->
+	<table id="RMCat" name="RMCat" style="position: absolute;visibility: hidden; background-color: buttonface; text-align:left; font-family: verdana; font-size:16; font-weight:bold;border:1px outset;" cellpadding=0 cellspacing=0>
+		<td>
+			<button style="width:100%" name="AddCat" title="Добавить новую категорию"
+				onmouseover="me.style.backgroundColor='404090':me.style.color='white'"
+				onmouseout="me.style.backgroundColor='buttonface':me.style.color='black'"
+			>&nbsp;Добавить&nbsp;</button><br>
+			<button style="width:100%" name="RenCat" title="Переименовать выбранную категорию"
+				onmouseover="me.style.backgroundColor='404090':me.style.color='white'"
+				onmouseout="me.style.backgroundColor='buttonface':me.style.color='black'"
+			>Переименовать</button><br>
+			<button style="width:100%" name="DelCat" title="Удалить выбранную категорию"
+				onmouseover="me.style.backgroundColor='904040':me.style.color='white'"
+				onmouseout="me.style.backgroundColor='buttonface':me.style.color='black'"
+			>Удалить</button>
+	</table>
+<!-- Контекстное меню для записей -->
+	<table id="RMUI" name="RMUI" style="position: absolute;visibility: hidden; background-color: buttonface; text-align:left; font-family: verdana; font-size:16; font-weight:bold;border:1px outset;">
+		<td>
+				<button style="width:100%;" name="Add" title="Добавить запись в выбранную категорию"
+					onmouseover="me.style.backgroundColor='404090':me.style.color='white'"
+					onmouseout="me.style.backgroundColor='buttonface':me.style.color='black'"				
+				>Добавить</button><br>
+				<button style="width:100%;" name="RenMe" title="Переименовать текущую запись"
+					onmouseover="me.style.backgroundColor='404090':me.style.color='white'"
+					onmouseout="me.style.backgroundColor='buttonface':me.style.color='black'"							
+				>Переименовать</button><br>
+				<button style="width:100%;" name="ChanCat" title="Перенести запись в другую категорию"
+					onmouseover="me.style.backgroundColor='404090':me.style.color='white'"
+					onmouseout="me.style.backgroundColor='buttonface':me.style.color='black'"								
+				>Иная категория</button><br>
+				<button style="width:100%;" name="DelIt" title="Удаление текущей записи"
+					onmouseover="me.style.backgroundColor='904040':me.style.color='white'"
+					onmouseout="me.style.backgroundColor='buttonface':me.style.color='black'"				
+				>Удалить</button><br>
+				<button style="width:100%;" name="DelAll" title="Очистить выбранную категорию от записей"
+					onmouseover="me.style.backgroundColor='904040':me.style.color='white'"
+					onmouseout="me.style.backgroundColor='buttonface':me.style.color='black'"								
+				>Удалить всё</button>
+	</table>
+<!-- Контекстное меню для текста -->
+	<table id="RMTxt" name="RMTxt" style="position: absolute;visibility: hidden; background-color: buttonface; text-align:left; font-family: verdana; font-size:16; font-weight:bold;border:1px outset;" cellpadding=0 cellspacing=0>
+		<td>
+			<button style="width:100%" name="CopyText" title="Копировать выделенный текст в буфер обмена (Ctrl+C)"
+				onmouseover="me.style.backgroundColor='404090':me.style.color='white'"
+				onmouseout="me.style.backgroundColor='buttonface':me.style.color='black'"
+			>&nbsp;Копировать&nbsp;</button><br>
+			<button style="width:100%" name="InsertText" title="Вставить текст из буфера обмена в позицию курсора (Ctrl+V)"
+				onmouseover="me.style.backgroundColor='404090':me.style.color='white'"
+				onmouseout="me.style.backgroundColor='buttonface':me.style.color='black'"
+			>Вставить</button><br>
+	</table>
+
+</form>
+
+<!-- Сообщение -->
+<form id="SilentMessage" 
+	Name="SilentMessage"
+	style=
+	"
+		color:			606060;
+		position:			absolute;
+		width: 				100%;
+		border: 			2px solid #f0f050;
+		background-color:	ffffa0;
+		text-align: 		center;
+	"
+>
+</form>
+</BODY></HTML>

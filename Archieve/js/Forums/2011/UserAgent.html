@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+		<script>
+			function setUserAgent(txt) {  
+				var fakeNavigator = {}, oldNavigator = {}, x;  
+				for (x in navigator) { 
+					fakeNavigator[x] = (x != "userAgent") ? navigator[x] : fakeNavigator[x] = txt;  
+				}  
+				oldNavigator = navigator;
+				alert ("s " + (s = 1));
+				alert(navigator = fakeNavigator);  
+				return oldNavigator;  
+			}  
+
+			try {setUserAgent("ie 1.0 win 3.11 compatible");  } catch(e) {}
+			alert(navigator.userAgent); 
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

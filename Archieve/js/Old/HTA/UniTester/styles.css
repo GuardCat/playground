@@ -1,0 +1,8 @@
+﻿body {
+	background-color	: buttonface;
+	color				: #000040;
+	font				: normal 10pt Verdana;
+	padding				: 5px;
+	margin-top			: 1em;
+	z-index				:	0;
+}

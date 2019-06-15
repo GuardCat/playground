@@ -1,0 +1,29 @@
+var randomer = ( function ( ) {
+
+  var funcObj = function(stacks, length) {
+    var i, mas, n, result, _i, _j;
+    result = [];
+    for (i = _i = 0; 0 <= stacks ? _i <= stacks : _i >= stacks; i = 0 <= stacks ? ++_i : --_i) {
+      mas = result[i] = [];
+      for (n = _j = 0; 0 <= length ? _j <= length : _j >= length; n = 0 <= length ? ++_j : --_j) {
+        this._a(mas, n, length);
+      }
+    }
+    return console.log(result);
+  };
+  
+  funcObj._a = function(mas, index, length) {
+    var random;
+    random = ~~(Math.random() * length);
+    if (!mas[random]) {
+      return mas[random] = index;
+    } else {
+      return this._a(mas, index, length);
+    }
+  };
+
+  return funcObj;
+
+} ) ( )
+
+randomer( [1,2,3,4], 3 )

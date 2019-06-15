@@ -1,0 +1,52 @@
+<html>
+<head>
+	<meta charset = "windows-1251">
+	<style type = "text/css">
+		h1 {
+			font-size		: 16pt;
+			font-weight	: bold;
+		}
+		p {
+			color: maroon;
+		}
+	</style>
+</head>
+<body>
+<h1>ƒепакиновый калькул€тор</h1>
+<nobr>
+	<input type="text" id="mg">
+	<select id="type">
+		<option value="0">мг > мл</option>
+		<option value="1">мл > мг</option>
+	</select>
+	<input type="button"value="start"onclick="go()">
+</nobr>
+<p id="pr"></p>
+<script type="text/javascript">
+var mlmg = 1 / 57.64;
+function go() {
+  userValue = gid("mg").value;
+  mgToMl = userValue * mlmg;
+  mlToMg = userValue / mlmg;
+  if(gid("type").value == "0") {
+    gid("pr").innerHTML =
+      userValue +
+      " мг. в миллилитрах = " +
+      (mgToMl).toFixed(4)+"<br>"+
+      "ƒелений шприца: ";
+      solidPart = ((mgToMl - mgToMl.toFixed(0)) > 0) ? mgToMl.toFixed(0) : mgToMl.toFixed(0)-1;
+      fractionPart = ((mgToMl - solidPart).toFixed(3) * 10 / 2).toFixed(1);
+    gid("pr").innerHTML += solidPart+ 
+      " <sup>" +
+      fractionPart +
+      "</sup><span style='margin-left:-12pt'>Ч</span><sub><span style='margin-left:-10pt'>5</sub>"
+  } else {
+        gid("pr").innerHTML = userValue +
+      " мл. в миллиграммах = " +
+      (mlToMg).toFixed(4)
+  }
+}
+function gid(txt){
+ return(document.getElementById(txt))
+}
+</script>

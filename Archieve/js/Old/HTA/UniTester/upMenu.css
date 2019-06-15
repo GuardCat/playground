@@ -1,0 +1,14 @@
+﻿/* Стили верхнего меню */
+
+#upMenu{
+	font-family:		Arial;
+	font-size:			16px;
+}
+#upMenu p {
+	padding:			0px;
+	margin:				0px;
+}
+#upMenu td {
+	vertical-align:	top;
+	display:	none;
+}

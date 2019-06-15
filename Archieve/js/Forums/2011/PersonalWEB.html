@@ -1,0 +1,36 @@
+﻿<HTML>
+    <HEAD>
+        <h2 align="CENTER">
+            Результат решения нелинейного уравнения методом итераций
+        </h2>
+        <script type="text/javascript">
+         function iter(obj) {
+     var s = Math.LOG10E * Math.log(1 + Math.sqrt(90))
+     var fs = x * x * x - 1 * x * x + 2 * x + s
+     var t = parseFloat(document.form1.tv.value)
+     var eps = 1
+     var x = t
+     var y = eval(fs)
+     while (Math.abs(y - x) >= eps) {
+         x = y;
+         y = eval(fs)
+     }
+     obj.res.value = x
+ }
+        </script>
+    </HEAD>
+    
+    <BODY bgcolor="F8F8FF">
+        <FORM name="forml">
+            Введите начальное приближение:
+            <input type=text size=8 name="tv">
+            <br>
+            <input type="button" value="Bычиcлить" onClick="iter()">
+            <br>
+            Корень уравнения равен:
+            <input type="text" size=20 name="res">
+            <br>
+            <input type="reset" value="Отменить">
+        </FORM>
+    </BODY>
+</HTML>

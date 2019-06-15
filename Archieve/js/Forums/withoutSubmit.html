@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Пример расчёта</title>
+	</head>
+	<body>
+		<div id = "form">
+				<form>
+					<input type ="text" name ="rNumb" value ="" size ="25" maxlength ="30" id = "rNumb">
+					<input type ="checkbox" checked value ="on" name = "pech" id = "check">
+					<input type ="checkbox" value = "on" name ="kopch" id ="check1" >
+				</form>
+			<div class = "result" id = "result"></div>
+		</div >
+		<script>
+			(
+				function () {
+					var
+						PECH = 3959,
+						KOPCH = 100	,
+						pechCheckbox = document.getElementById("check"),
+ 						kopchCheckbox = document.getElementById("check1"),
+						amountInput = document.getElementById("rNumb")
+					;	
+					function calculateIt() {
+						var 
+									pech = pechCheckbox.checked ? PECH : 0,
+									kopch = kopchCheckbox.checked ? KOPCH : 0,
+									amount = parseInt(amountInput.value)
+						;
+						amount = amount || 0;
+						document.getElementById("result").innerHTML = (pech + kopch) * amount + " р.";
+					}
+ 					return pechCheckbox.onclick = kopchCheckbox.onclick = amountInput.onkeyup = calculateIt;
+				}
+			)()(); //Один раз вызываем функцию calculate, чтобы получить ноль в поле результата.
+		</script>
+	</body>
+</html>

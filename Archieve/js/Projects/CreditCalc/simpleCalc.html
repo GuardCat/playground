@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset = "utf-8">
+  <title>Удобный кредитный калькулятор</title>
+  <link rel = "stylesheet" href = "styles.css" type = "text/css"></link>
+</head>
+
+<body>
+  <div class = 'header'>Simple credit calc: простой расчёт кредита</div>
+  <sub class = "comment">Честно, наглядно, просто.</sub>
+	
+  <form name = "calc" class = "calc">
+    <label>
+      <input name = "sum" placeholder = "столько" type = "text" class = "needCheck"></abbr>
+      нужная сумма
+    </label>
+    <label>
+      <input name = "term" placeholder = "на столько" type = "text" class = "needCheck">
+      срок в месяцах (можно ввести так: «2 года 5 мес.» или «5 лет»)
+    </label> 
+    <label>
+      <input name = "rate" placeholder = "за столько % в год" type = "text" class = "needCheck">
+      годовая процентная ставка (не ПСК и не переплата)
+    </label>   
+     <label>
+      <input name = "firstPayment" placeholder = "столько внесу" type = "text" class = "txt" title = "Необязательное поле">
+      размер первоначального взноса (добавьте «%», если в процентах)
+    </label>
+    
+    <h3>Тип платежей</h3>
+    <label>
+      <input type = "radio" name = "paymentType" value = "annuitet" checked></input>
+      Все одинаковые (аннуитетные) 
+    </label>
+    <label>    
+      <input type = "radio" name = "paymentType" value = "differ" ></input>
+      Уменьшающиеся каждый месяц (дифференцированные) 
+    </label>
+    <nobr><input id = "go" type = "button" value = " Расчёт"><img src = 'print.png' onclick = 'print();' alt = "Печать расчётов"></nobr>
+  </form> 
+  <div id = "report"></div>
+  
+  <div class = "footer">
+    <hr noshade size = "1px" align = "left">
+    Кредитный калькулятор, использующий стандартные формулы для расчётов &copy; <a title = "Посмотреть профиль автора на одном из форумов" href = "http://javascript.ru/forum/members/15847-guardcat/">Guardcat</a> 2012    
+  </div>
+	
+  <script src = "newCredit.js">	</script>
+  <script src = "main.js">		</script>
+	<script src = "operator.js">	</script> 
+</body>
+</html>

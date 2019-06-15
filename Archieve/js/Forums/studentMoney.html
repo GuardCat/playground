@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv = "content-type" content = "text/html;charset=windows-1251">
+	</head>
+	<body>
+		<script>
+/*
+		Ежемесячная стипендия студента составляет A руб., 
+	а расходы на проживание превышают стипендию и составляют В руб. в месяц.
+	Рост цен ежемесячно увеличивает расходы на 3%. Составьте программу 
+	расчета суммы денег, которую необходимо единовременно попросить у 
+	родителей, чтобы можно было прожить учебный год (10 месяцев), 
+	используя только эти деньги и стипендию.
+	A --- grant
+	B --- expensesPerMonth
+*/
+function needMoney(grant, expensesPerMonth) {
+	var x, summForAsk = 0;
+	for(x = 0; x < 2; x++) {
+		summForAsk += (expensesPerMonth - grant);
+		expensesPerMonth *= 1.03;
+	}
+	return summForAsk.toFixed(2);
+}
+alert(needMoney(1000, 1000));
+		</script>
+	</body>
+</html>

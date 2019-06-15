@@ -1,0 +1,69 @@
+textarea {
+	width: 100%;
+	height: 45px;
+	float: right;
+}
+body {
+	padding: 0px 0px 0px 0px;
+	background-color: buttonface;
+	font-size: 10pt;
+	font-family: Arial;
+}
+table {
+	width: 100%;
+	border: 0px;
+	font-size: 10pt;
+	font-family: Arial;
+}
+table td {
+	padding: 0 0 10px 0;
+}
+table td.indicator {
+	text-align: right;
+	width:	30%;
+}
+input {
+	width: 100%;
+	border: 1px solid black;
+	background-color: #909090;
+	color: white;
+}
+#msg {
+	position: absolute;
+	border: 3px outset;
+	width: 80%;
+	padding: 0px;
+	z-index: 100;
+	background-color: buttonface;
+}
+#msg caption{
+	background-color: #5050a0;
+	color: white;
+	font-weight: bold;
+	font-family: tahoma;
+	text-align: left;
+	font-size: 9pt;
+}
+#msg td {
+	padding: 5px;
+}
+.closeButton {
+	background-color: buttonface;
+	font-size:	7pt;
+	border: 2px outset;
+	width: 20px;
+	height: 20px;
+	margin: 0px;
+	padding: 0px;
+}
+.closeButtonFrame {
+	float: right;
+}
+.buttons{
+	text-align: center;
+	font-size:	9pt;
+}
+.text {
+	text-indent: 20px;
+	font-size:	9pt;
+}

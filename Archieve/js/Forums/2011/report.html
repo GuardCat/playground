@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Отчёт</title>
+		<script>
+			function makeReport () {
+				var 
+					x, inputs = document.getElementsByTagName("input"),
+					caption = inputs[0].value, h1, code
+				;
+				for (x = inputs.length - 1; x >= 0; x--) {
+					inputs[x].parentNode.removeChild(inputs[x]);
+				}
+				h1 = document.createElement("H1");
+				h1.innerHTML = caption;
+				document.body.appendChild(h1);
+
+				code = document.createElement("PRE");
+				code.innerHTML = document.head.getElementsByTagName("script")[0].innerHTML;
+				document.body.appendChild(code); 
+			}
+			window.onload = function () {
+				document.getElementById("go").onclick = makeReport;
+			}
+
+		</script>
+	</head>
+	<body>
+		<input type="text" id = "text">
+		<input type="button" value="Сформировать" id = "go">
+	</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Untitled</title>
+	</head>
+	<body>
+		<select id = "selector">
+			<option value = "1" selected>picture one</option>
+ 			<option value = "2">picture two</option>
+ 			<option value = "3">picture three</option>
+ 		</select>
+		<img src ="1.jpg" id = "picturebox">
+		<script>
+				function gid(id) {
+					return document.getElementById(id);
+				}
+				gid("selector").onchange = function() {
+					gid("picturebox").src = this.value + ".jpg";
+				}
+		</script>
+	</body>
+</html>

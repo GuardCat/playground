@@ -1,0 +1,21 @@
+﻿<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Сообщение</title>
+	</head>
+	<body bgcolor = "buttonface">
+		<center>
+			<input type = "button" value = "Ok" id = "Ok">
+		</center>
+			<script type = "text/javascript">
+				window.onload = function () {
+					alert(parent.parent.parent.parent.parent.document.body.innerHTML);
+					document.getElementById("Ok").onclick = function () {
+						alert(window.parent.say);
+						//alert(i);
+						//i.parentNode.removeChild(i);
+					}
+				}
+			</script>
+	</body>
+</html>

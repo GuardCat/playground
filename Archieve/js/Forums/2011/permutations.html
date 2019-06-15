@@ -1,0 +1,59 @@
+<!DOCTYPE html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Перестановки</title>
+<script type="text/javascript">
+alert (pers ("forum","murof") );
+alert (pers ("forum") );
+/* Функция возвращает переданную ей строку,
+* поменяв местами указанные символы.
+* Принимает три аргумента: строку, и два
+* порядковых номера символов для взаимозамены.
+* Дуракоустойчивость не предусмотрена.
+*/
+function swapLetters (text,a,b) {
+	if (a==b) {
+		return (text);
+	}
+	if (a>b) {
+		var c=b; b=a; a=c;
+	}
+	return (
+		text.substr (0,a)+
+		text.substr (b,1)+
+		text.substr (a+1,b-a-1)+
+		text.substr (a,1)+
+		text.substr (b+1)
+	)	
+}
+
+/* Функция для синтеза всех возможных перестановок символов
+*в переданной строке. Не учитывает повторения символов.
+*Принимает один или два строковых аргумента. 
+*Если аргумент один, возвращает все варианты перестановок.
+*Если аргумента два, сообщает на каком шаге всех циклов
+*найден второй аргумент или сообщает о неудачном поиске.
+*Дуракоустойчивость не предусмотрена.
+*Фильтрация дублей в результате (если есть одинаковые буквы)
+*не предусмотрена.
+*/
+function pers (txt,searchTxt) {
+	var result=[""],letter,item,itemLetter,resultLen, sample;
+	searchTxt=searchTxt || "";
+	for (letter=0;letter<txt.length;letter++) {
+		resultLen=result.length;
+		for (item=0;item<resultLen;item++) {
+			result[item]+=txt.substr(letter,1);
+			for (itemLetter=0; itemLetter<result[item].length-1; itemLetter++) {
+				sample=swapLetters (result[item],itemLetter,result[item].length-1);
+				if (sample==searchTxt) {
+					return ("Образец '"+searchTxt+"' найден на шаге "+letter*result.length*sample.length) 
+				} else {
+	 				result.push (sample);
+				}
+			}
+		}
+	}
+	return (searchTxt.length>0?"Образец не найден":result);
+}
+
+</script>
+</head><body></body></html>

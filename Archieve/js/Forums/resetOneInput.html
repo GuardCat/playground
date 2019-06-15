@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Untitled</title>
+</head> 
+<body>
+ 		<input type="" value="Это поле не сбрасывается">
+ 		<input type="" value="И это тоже">
+ 		<input type="" value="А это сбрасывается">
+		<input type="button" value="reset one" onclick = "reseter.reset(document.getElementsByTagName('input')[2])" />
+</body>
+<script>
+	reseter = (function (){
+		var x;
+		return {
+			set: function (inputsArr) {
+				values = inputs = [];
+				for(x = 0; x < inputsArr.length; x++) {
+					inputsArr[x].oldValue = inputsArr[x].value;
+				}
+			},
+			reset: function(input) {
+				if("oldValue" in input) {
+					input.value = input.oldValue;
+				}
+			}
+		}
+	})()
+	reseter.set(document.getElementsByTagName("input"));
+</script>
+</html>[/js]

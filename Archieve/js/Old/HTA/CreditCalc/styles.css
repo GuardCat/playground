@@ -1,0 +1,110 @@
+﻿body {
+  font-family:    		Arial, Tahoma;
+  font-size:      		15px;
+  background-color:   	#ffffff;
+  padding: 0px;
+  margin: 10px 0px 0px 10px;
+}
+
+.header {
+  font-size:      27px;
+  color:        maroon;
+  font-weight:    bold;
+}
+
+.comment {
+  color:        gray;
+  font-size:      17px;
+}
+
+
+h2 {
+  font-size:        20px;
+  font-weight:      bold; 
+  color:          #701010;
+}
+
+h3 {
+  font-weight:  bold;
+  margin:     20px 0 0 0; 
+}
+
+label {
+  display: block;
+  margin: 5px 0 0 0;
+}
+
+.calc {
+  margin-top: 20px;
+}
+.calc .needCheck, .calc .txt {
+  text-align: right;
+  border-radius: 5px;
+  border: 1px solid;
+
+}
+
+.wrong {
+  background-color: #ffd0d0;
+  border-radius: 5px;
+  border: 1px solid gray;
+  text-align: right;
+
+}
+#report: {
+	clear: both;
+}
+.reportTable {
+	font-size: 16px;
+	margin-top: -15px;
+}
+.reportTable td.l{
+  font-weight: bold;
+  text-align: right;
+}
+
+.column {
+  float: left;
+  margin: 10px -1px 10px 0px;
+  border: 1px solid silver;
+ }
+
+.paymentsGroup {
+	font-weight: bold;
+	text-align: center;
+	background-color: gray;
+	color: white;
+}
+
+.payment {
+	margin: 10px;
+}
+.num {
+  background-color: #eee;
+}
+
+.footer {
+  clear: 		both;
+  margin-top: 	20px;
+  font-size:  	10px;
+}
+
+#go {
+  margin:  			20px 10px 10px 0px;
+  width:		 	90%;  
+  border-radius:  	5px;
+  border:			2px outset;
+  font-size:  		24px;
+  text-align:  		left;
+}
+
+img {
+	cursor: 	pointer;
+	display: 	inline;
+	width: 		50px;
+}
+
+hr {
+	width: 800px;
+	text-align: left;
+}

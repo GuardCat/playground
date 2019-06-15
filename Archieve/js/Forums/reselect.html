@@ -1,0 +1,49 @@
+
+<!DOCTYPE html><html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Select с памятью</title>
+</head>
+<body>
+	<select onchange = "reloader.reload(this.value); showhideBlocks(this.value)" id = "selector">
+		<option value = "1">Первый</option>
+ 		<option value = "2">Второй</option> 
+ 		<option value = "3">Третий</option> 
+	</select>
+	<script>
+		reloader = (function() {
+			var 
+				val = location.search.substr(1), options, x,
+				i = 0, WAITFOR = 2, oldVal
+			;
+			return {
+				reload: function(selectValue) {
+					if(++i < WAITFOR) {
+						oldVal = selectValue;
+						return;
+					}
+					if(val) {
+						location.href = location.href.substr(0, location.href.lastIndexOf(val) - 1) + "?" + oldVal; 
+					} else {
+						location.href = location.href + "?" + oldVal;
+					}
+				},
+				reselect: function(sel) {
+					if(!val) return;
+					options = sel.getElementsByTagName("option");
+					for(x = 0; x < options.length; x++) {
+						if(options[x].value === val) {
+							options[x].selected = true;
+							break;
+						}
+					}
+				}
+			}
+		})();
+		window.onload = function() {
+			reloader.reselect(document.getElementById("selector"));
+			alert("Загрузка страницы.");
+		} 
+	</script>
+</body>
+</html>

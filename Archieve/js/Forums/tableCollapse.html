@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <style type = "text/css">
+     .collapsible .collapse {
+       display: none;
+     }
+   </style>
+		<title>Untitled</title>
+	</head>
+	<body>
+	  <table class="collapsible">
+	<thead>
+		<tr>
+			<th></th>
+			<th>Тип</th>
+			<th>Количество пассажирских мест</th>
+			<th>Дальность полета (км)</th>
+			<th>Вместительность багажника (м³)</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><img src="images/planes/ececuliners.png" alt="Execuliners" /></td>
+			<td><span>Execuliners</span></td>
+			<td><span>50</span></td>
+			<td><span>11520</span></td>
+			<td><span>18.1</span></td>
+		</tr>
+		<tr>
+			<td colspan="2">Airbus Corporate Jetliner (ACJ)</td>
+			<td>43</td>
+			<td>11297</td>
+			<td>9.6</td>
+		</tr>
+		<tr>
+			<td colspan="2">Boeing Business Jet (BBJ)</td>
+			<td>50</td>
+			<td>11519</td>
+			<td>17.5</td>
+		</tr>
+		<tr>
+			<td colspan="2">Embraer Lineage 1000</td>
+			<td>19</td>
+			<td>7800</td>
+			<td>18.1</td>
+		</tr>
+	</tbody>
+	<tbody>
+		<tr>
+			<td><img src="images/planes/ececuliners.png" alt="Execuliners" /></td>
+			<td><span>Execuliners</span></td>
+			<td><span>50</span></td>
+			<td><span>11520</span></td>
+			<td><span>18.1</span></td>
+		</tr>
+		<tr>
+			<td colspan="2">Airbus Corporate Jetliner (ACJ)</td>
+			<td>43</td>
+			<td>11297</td>
+			<td>9.6</td>
+		</tr>
+		<tr>
+			<td colspan="2">Boeing Business Jet (BBJ)</td>
+			<td>50</td>
+			<td>11519</td>
+			<td>17.5</td>
+		</tr>
+		<tr>
+			<td colspan="2">Embraer Lineage 1000</td>
+			<td>19</td>
+			<td>7800</td>
+			<td>18.1</td>
+		</tr>
+	</tbody>
+	<tbody>
+		<tr>
+			<td><img src="images/planes/ececuliners.png" alt="Execuliners" /></td>
+			<td><span>Execuliners</span></td>
+			<td><span>50</span></td>
+			<td><span>11520</span></td>
+			<td><span>18.1</span></td>
+		</tr>
+		<tr>
+			<td colspan="2">Airbus Corporate Jetliner (ACJ)</td>
+			<td>43</td>
+			<td>11297</td>
+			<td>9.6</td>
+		</tr>
+		<tr>
+			<td colspan="2">Boeing Business Jet (BBJ)</td>
+			<td>50</td>
+			<td>11519</td>
+			<td>17.5</td>
+		</tr>
+		<tr>
+			<td colspan="2">Embraer Lineage 1000</td>
+			<td>19</td>
+			<td>7800</td>
+			<td>18.1</td>
+		</tr>
+	</tbody>
+</table>
+		<script>
+     ( function (className) {
+       var 
+         x, tables = document.querySelectorAll("." + className),
+
+         collapse = function (e) {
+           var 
+             trs, x, clickedTr = e.target.parentNode.parentNode,
+             th = clickedTr.parentNode
+           ;
+           if ( clickedTr === th.querySelector( "tr" ) ) {
+             trs = th.querySelectorAll("tr")
+             for (x = 1; x < trs.length; x++) {
+               trs[x].className = trs[x].className === "collapse" ? "" : "collapse"; 
+             }
+           }           
+         }
+       ;
+       for (x = 0; x < tables.length; x++) {
+         tables[x].addEventListener("click", collapse, false)
+       }
+    } ) ("collapsible")
+		</script>
+	</body>
+</html>

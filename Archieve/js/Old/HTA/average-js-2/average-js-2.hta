@@ -1,0 +1,52 @@
+﻿<HTA:APPLICATION
+  APPLICATIONNAME="averageJsApplication"
+  ID="averageJsApplication"
+  VERSION="2.0.0.5"
+  INNERBORDER="no"
+  SCROLL="auto"
+  SCROLLFLAT="yes"
+  CONTEXTMENU="no"
+/>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Расчёт среднего арифметического (нажмите ctrl+R для отчёта)</title>
+		<link rel = "stylesheet" type = "text/css" href = "styles.css">
+	</head>
+	<body>
+		<form name = "mainform" id = "mform">
+			<table id = "mainTable">
+				<tr>
+					<td class = "indicator">
+						<div>Введено значений:</div>
+						<div>Среднее арифметическое:</div>
+					</td>
+					<td>
+						<input type = "text">
+						<textarea></textarea>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div id = "msg" style = "display:none">
+			<table>
+				<caption>
+					<span class = "closeButtonFrame">
+						<button class = "closeButton">X</button>
+					</span>
+					<span>Заголовок<span>
+				</caption>
+				<tr class = "text" name = "text">
+					<td>Текст</td>
+				</tr>
+				<tr class = "buttons" name = "buttons">
+					<td><button>Ok</button></td>
+				<tr>
+			</table>
+		</div>
+		<script type = "text/javascript" src = "functions.js"></script>
+		<script type = "text/javascript" src = "onload.js"></script>
+		<script type = "text/javascript" src = "for_sew.js"></script>
+		<script type = "text/javascript" src = "Array_extensions.js"></script>
+	</body>
+</html>

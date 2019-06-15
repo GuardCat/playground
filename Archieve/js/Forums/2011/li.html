@@ -1,0 +1,24 @@
+<html><body>
+<ol>
+	<li> <a href="#">ccskrf1</a> 
+	<li> <a href="#">ccskrf1</a> 
+	<li> <a href="#">ccskrf1</a> 
+ 	<li> <p>ccskrf1</p> 
+ 
+</ol>
+ <a href="#">ccskrf1</a> 
+<script>
+ window.onload = function () { 
+		var allLi = document.getElementsByTagName("li"); 
+		var x, y, links;
+		for(x = 0; x < allLi.length; x++) { 
+			links = allLi[x].getElementsByTagName("a");
+			for(y = 0; y < links.length; y++) {
+				links[y].style.color = "green";
+				links[y].parentNode.style.margin = "0px 0px 0px 20px";
+			}
+		}
+	} 
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset = "utf-8">
+    <title> </title>
+  </head>
+  <body>
+    <label> Введите предложение<input></label>
+    <span></span>
+    <script>
+      var input = document.querySelector( "input" ), span = document.querySelector( "span" );
+      function countBites( text, bitesPerSymbol ) {
+        if ( !text.length || !bitesPerSymbol ) return 0;
+
+        var bites = text.length * bitesPerSymbol;  
+        return Math.ceil( ( Math.log( bites ) / Math.log( 2 ) ) )// Логарифм от количества битов по основанию 2, округленный вверх
+      }
+
+      input.onkeyup = function () {
+        span.innerHTML = "Для кодирования нужно бит: " + countBites( input.value, 2 * 8 /* байты перевели в биты */)
+      }
+    </script>
+  </body>
+</html>

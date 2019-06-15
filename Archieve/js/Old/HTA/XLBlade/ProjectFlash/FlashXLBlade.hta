@@ -1,0 +1,31 @@
+﻿<HTA:APPLICATION
+  APPLICATIONNAME="XLBlade"
+  ID="XLBlade"
+  VERSION="3.2.0.6"
+  INNERBORDER="no"
+  ICON="XLBlade.ico"
+  SCROLL="no"/>
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv = "Content-Type" content="text/html; charset=utf-8">	
+		<link rel = "stylesheet" type = "text/css" href = "styles.css">
+		<title>Flash blade for Excel</title>
+	</head>
+	<body>
+		<p id = "info" class = "info">Завершено: ...</p>
+		<form name = "mainForm">
+			<label>Выберите файл Excel:</label> <input type = "file" id = "fileName"><br><br>
+			<label>Столбец, по которому будем разрезать:</label> <select id = "column" disabled></select><br><br>
+			<button id = "go" style = "float:right; margin: 10px 0 0 0;" disabled>Нарезать</button>
+			<br>
+		</form>
+		<label>Отчёт о работе программы</label>
+		<textarea id = "toaster"></textarea>
+		<label style = "float: right;">Сохранять в старом формате<input style = "width: 20px;" type = "checkbox" id = "oldFormat" checked></label>
+		<script src = "addons.js"></script>
+		<script src = "startFunctions.js"></script>
+		<script src = "mainFunctions.js"></script>
+	</body>
+</html>
+

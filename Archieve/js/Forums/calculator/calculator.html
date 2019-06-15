@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv = "content-type" content = "text/html;charset=windows-1251">
+		<link rel = "stylesheet" href = "styles.css" type = "text/css">
+	</head>
+	<body>
+		<table class = "price">
+			<caption>Прайс на наши товары
+			<tr class = "captions">
+				<td>№
+				<td>Товар
+				<td>Фасовка
+				<td>Цена
+				<td>Штук
+				<td>Общим весом
+				<td>На сумму
+			<tr>
+				<td>01
+				<td>Цемент
+				<td>50 кг.
+				<td>120 р.
+				<td class = "editIt"><input type = text>
+				<td>0 кг.
+				<td>0 р.
+			<tr>
+				<td>02
+				<td>Мазут
+				<td>100 кг.
+				<td>70 р.
+				<td class = "editIt"><input type = text>
+				<td>0 кг.
+				<td>0 р.			
+			<tr>
+				<td>03
+				<td>Дизельное топливо
+				<td>200 кг.
+				<td>40000 р.
+				<td class = "editIt"><input type = text>
+				<td>0 кг.
+				<td>0 р.
+			<tr>
+				<td>04
+				<td>Сахарная пудра
+				<td>50 кг.
+				<td>2000 р.
+				<td class = "editIt"><input type = text>
+				<td>0 кг.
+				<td>0 р.
+			<tr>
+				<td>05
+				<td>Кокаин очищенный
+				<td>0.01 кг.
+				<td>7000 р.
+				<td class = "editIt"><input type = text>
+				<td>0 кг.
+				<td>0 р.
+			<tr class = "total">
+				<td colspan = "4"> Итого:
+				<td>0 шт.
+				<td>0 кг.
+				<td>0 р.		
+		</table>
+		<script src = "calculator.js"></script>
+		<script>
+			window.onload = function () {
+				calculator(" кг.", " р.");
+			}
+		</script>
+	</body>
+</html>

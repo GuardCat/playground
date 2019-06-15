@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<HTA:APPLICATION
+  APPLICATIONNAME="test_Excel"
+  ID="te"
+  VERSION="0"
+  BORDER="thin"
+  BORDERSTYLE="static"
+  INNERBORDER="no"
+  CAPTION="yes"
+  SYSMENU="no"
+  MAXIMIZEBUTTON="yes"
+  MINIMIZEBUTTON="yes"
+  SCROLL="no"
+  SINGLEINSTANCE="yes"
+  WINDOWSTATE="normal"
+  SHOWINTASKBAR="yes"
+  CONTEXTMENU="no"
+  SELECTION="no"/>
+<html>
+<head>
+	<title>Доступ к Excel</title>
+</head>
+
+
+<body>
+
+<script type="text/javascript">
+	var ex=new ActiveXObject("Excel.Application");
+	var wb=ex.Workbooks.add;
+	var sh=wb.ActiveSheet;
+	ex.Visible=true;
+	ex.DisplayAlerts=false;
+	try{
+		sh.range("A1:a2").value="Taste it";
+	} catch(e) {
+		alert(e.name+": "+e.description);
+	}
+	wb.SaveAs ("c:\\test.xls", "xls");
+	
+	
+	ex.Quit();
+	ex=null;
+	wb=null;
+	//window.close();
+document.onkeydown=function()
+{
+	if (event.keyCode=27)
+	{
+		window.close()
+	}
+}
+</script>
+</body>
+

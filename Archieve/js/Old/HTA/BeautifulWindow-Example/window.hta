@@ -1,0 +1,39 @@
+﻿<HTA:APPLICATION
+  APPLICATIONNAME="jsHTACompiler"
+  ID="compiler"
+  VERSION="0.0.0.1b"
+  BORDER="thin"
+  INNERBORDER="no"
+  SCROLL="no"
+  SCROLLFLAT="yes"
+  SINGLEINSTANCE="yes"
+  CONTEXTMENU="no"
+  SELECTION="no"/>
+<!doctype html>
+<html>
+<head>
+	<meta charset = "utf-8">
+	<style type = "text/css">
+		body {
+			margin: 0px;
+			padding: 0px;
+			background-color: silver;
+		}
+		#windowCaption {
+			padding: 10px;
+			width: 100%;
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=gray, endColorStr=red, GradientType=1); 
+		}
+	</style>
+	<title>JS HTA Compiler</title>
+</head>
+<body>
+<p id = "windowCaption">Тестируем модальный диалог</p>
+<script>
+	document.onkeydown = function() {
+		if (event.keyCode === 27) window.close();
+	}
+	alert(showModalDialog('uniquazer.hta', "", "dialogHeight: 100px; dialogWidth: 200px"));
+</script>
+</body>
+</html>

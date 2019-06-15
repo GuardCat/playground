@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <meta codepage charset = "utf8">
+  </head>
+    
+<body>
+  <p id = 'parent'>
+    <input type = "button"
+     id = "test"
+     value = "test"
+     onclick = "alert('встроенное событие, которое надо опередить')"
+    >
+    
+    <input type = "button"
+     id = "another"
+     value = "another"
+     onclick = "alert('другое событие, которое не трогаем')"
+    >
+    
+  </p>
+  
+<script>
+
+// здесь Ваш код, который будет в расширении
+
+  document.querySelector("#parent").addEventListener("click", 
+    function (e) {
+      if (e.target.id != "test") return true;
+      
+      alert( "опередили встроенное событие!")
+    },
+    true
+  )
+</script>
+  

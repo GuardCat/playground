@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head></head>
+<body>
+  <input type = "text" id = "lookAtMe">
+  
+  <script>
+   
+   setValueKeeping = ( function() {
+   
+   		function checkValue() {
+   				if (this.value != this.oldValue) this.changeFlag = true;
+   		}
+     
+     finction totalCheck() {
+       if (this.changeFlag) {
+         
+       }
+
+   		}
+   		
+     return function( elem, seconds, callback ) {
+       elem.changeFlag = false;
+       elem.oldValue = elem.value;
+       elem.totalCheck = totalCheck;
+     
+       if (elem.addEventListener) {
+        elem.addEventListener("change", checkValue, false);
+       } else {
+         elem.tempFn = function() {
+           checkValue.call(elem, window.event)
+         }
+         elem.attachEvent("onchange", elem.tempFn)
+       }
+       
+       elem.timerId = setTimeout( elem.totalCheck, seconds * 1000);
+     }
+   } )( )
+  </script>
+
+</body></html>

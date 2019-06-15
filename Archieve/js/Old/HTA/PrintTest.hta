@@ -1,0 +1,57 @@
+<html>
+<head>
+<title>wmi</title>
+<HTA:APPLICATION
+  APPLICATIONNAME="Печать тестовой страницы на принтер по умолчанию"
+  ID="PTP"  VERSION="1.2" BORDER="dialog" INNERBORDER="no" SCROLL="no"
+  SINGLEINSTANCE="yes" SHOWINTASKBAR="yes" CAPTION="no" />
+</head>
+
+<script language="VBScript">
+Option Explicit
+
+Sub window_onload
+	Dim WW, WH: WW=200:WH=120
+	Self.resizeTo WW, WH
+	Self.moveTo (Screen.AvailWidth-WW)/2, (Screen.AvailHeight-WH)/2
+End sub
+
+Sub document_onKeyDown()
+	If window.event.keyCode=27 Then Self.close()
+End sub
+
+Sub Print_onclick()
+	Dim Er,objItem, objWMIService, colItems 
+	Set objWMIService = GetObject("winmgmts:\\.\root\cimv2")
+	Set colItems = objWMIService.ExecQuery("Select * from Win32_Printer",,48)
+	
+	For Each objItem in colItems
+		If objItem.Default Then 
+			Er = objItem.PrintTestPage
+			If Er<>0 Then
+				MsgBox "Произошла ошибка, код: "&Er,16,"Ошибка"
+			End if
+		End if
+	Next
+End Sub
+
+Sub Close_onclick()
+  window.Close
+End Sub
+
+</script>
+
+<body bgcolor="black">
+<table border=0 width=100% height=100%>
+<tr><td height=100% width=100% valign=top align=left>
+
+</td></tr>
+<tr><td align=right>
+<p style="color: white; font-size:10; font-family:arial;text-align:center">Печать тестовой страницы на принтер по умолчанию</p>
+<input type="button" style="width: 80px; height:25px; font-size: 14" name="Print" id="Print" value="Печать">&nbsp;&nbsp;
+<input type="button" style="width: 80px;height:25px; font-size: 14" name="Close" id="Close" value="Выход">
+</td></tr>
+</table>
+</table>
+</body>
+</html>

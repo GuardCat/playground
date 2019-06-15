@@ -1,0 +1,37 @@
+﻿<!doctype html>
+<html>
+<head>
+	<style type = "text/css">
+		.timer {
+			width		:	170px;
+			height		:	170px;
+			z-index		:	4;
+		}
+		.timer .hand {
+			position	:	relative;
+			left		:	0px;
+			top			:	-173px;
+			border		:	0px;
+			z-index		:	5;
+		}
+	</style>
+</head>
+<body>
+	<div class = "timer">
+		<img src = "ciferblat.gif" class = "timer">
+		<img id = "hand" class = "hand" src = "00.gif">
+	</div>
+	<script>
+		function tick(){
+			var src = document.getElementById("hand").src, now = +src.substr(src.length - 6, 2);
+			document.getElementById("hand").src = addZero((now + 1)) + ".gif";
+			function addZero(txt){
+				if (String(txt).length === 1) return "0" + txt;
+				return txt;
+			}
+		}
+		
+		setInterval(tick, 1000);
+	</script>
+</body>
+</html>

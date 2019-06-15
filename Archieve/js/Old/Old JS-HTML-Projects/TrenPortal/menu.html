@@ -1,0 +1,48 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
+<style type="text/css">
+p{border: 0px;
+margin: 15px 15px 2px 0px; 
+text-align: center;}
+
+body{margin: 25px 5px 5px 5px}
+A{border: 0px;
+background: white; 
+padding: 0px 0px 0px 10px;
+text-align: center;
+vertical-align: top;
+text-decoration:none;
+color: blue;
+background:transparent;
+font: normal normal 15px arial;}
+A:hover{color:red;}
+A:visited{color: 000090;}
+
+.plus{font: normal normal 18px monospace;
+ border: 1px solid gray;
+ color: gray;
+ padding: 0 0 0 0;
+ width: 18px;
+ height:18px;
+ text-align: center;
+ float: left;
+}
+</style>
+
+<body bgcolor=white>
+<p>
+ <a href="javascript: test('df')" id="df" title="Кликните, чтобы посмотреть на механизм, вшитый в ссылку"> Уроки тренерского мастерства
+ </a>
+</p>
+<p><a href="javascript:alert(1);">Упражнения на все случаи жизни</a></p>
+<p><a href="javascript:alert(1);">Готовые тренинги</a></p>
+<p><a href="javascript:alert(1);">Подборка литературы</a></p>
+
+
+</body>
+
+<script>
+function test(txt){
+ document.getElementById(txt).innerHTML=Math.random();
+ }
+</script>

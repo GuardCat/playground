@@ -1,0 +1,110 @@
+<html>
+<head>
+<title>Poligon</title>
+<HTA:APPLICATION
+  APPLICATIONNAME="Poligon"
+  ID="Poligon"
+  VERSION="1.0"
+  SINGLEINSTANCE="yes"/>
+</head>
+
+<script language="VBScript">
+
+Sub Window_OnLoad
+  	Dim width,height
+  	width=250
+  	height=300
+  	self.ResizeTo width,height
+  	self.MoveTo (screen.AvailWidth-width)/2,(screen.AvailHeight-height)/2
+	alert vbcrlf
+
+End Sub
+
+'Sub document_onclick
+Sub WriteProfileString(section,key,filename,value)
+  
+  If MyTrim(section)="" Or Mytrim(key)="" then
+    Exit Sub
+  End if
+    
+  dim contentini
+  contentini=""
+  
+  if fso.FileExists(filename) then
+    Dim readini,bsection,bSectionFound,bKeyFound
+    bKeyFound=False
+    bsection=False
+    bsectionFound=False
+    
+    Set readini = fso.OpenTextFile(filename,1)
+    Do while not(readini.AtEndOfStream)
+      Dim strini,trimstrini
+      strini = readini.ReadLine
+      trimstrini = MyTrim(strini)
+      if Left(trimstrini,1)="[" and Right(Trimstrini,1)="]" then
+        if StrComp(Trimstrini,"[" & MyTrim(section) & "]",1)=0 Then
+          bsection=True
+          bsectionFound=True
+        else
+          bsection =False
+        end if
+      Else
+        if bsection then
+          Dim poskey
+          poskey = InStr(Trimstrini,"=")
+          if posKey>0 then
+            if StrComp(MyTrim(Left(Trimstrini,poskey-1)),MyTrim(key),1)=0 Then
+              bKeyFound = True
+              strini = Left(Trimstrini,poskey) & " " & value
+            end If  
+          End if
+        end if
+      End if
+      
+      if bsectionFound=True and bsection=False and bKeyFound=false then
+        contentini = contentini & key & "=" & value & vbcrlf
+        bKeyFound = True
+      end if
+      
+      if MyTrim(strini)<>"" then
+        if Left(trimstrini,1)="[" and Right(Trimstrini,1)="]" And contentini<>"" then
+          contentini = contentini & vbCrlf
+        end if
+        
+        contentini = contentini & strini & vbCrlf
+      end if
+    Loop
+
+    if bsectionFound=True and bsection=True and bKeyfound =false then
+      contentini = contentini & key & "=" & value & vbcrlf
+    end if
+    
+    if bsectionFound=False Then
+      contentini = contentini & vbcrlf & "[" & section & "]" & vbcrlf & key & "=" & value & vbcrlf
+    end if
+    
+    readini.Close
+    
+  Else
+    contentini = "[" & section & "]" & vbcrlf & key & "=" & value & vbcrlf
+  End if
+  
+  
+  Dim writeini 
+  set writeini = fso.CreateTextFile(filename,True)
+  writeini.Write contentini
+  writeini.Close
+End Sub
+
+
+
+'End sub
+</script>
+
+<body bgcolor="white">
+
+<!--Add your controls here-->
+
+<!--{{InsertControlsHere}}-Do not remove this line-->
+</body>
+</html>

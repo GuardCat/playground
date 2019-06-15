@@ -1,0 +1,60 @@
+/* console.css */
+
+#console {
+  margin					: 40px 0 0 0;
+}
+
+#console > table {
+  width      : 100%;
+  border     : 0px;
+  font-family: Monospace;
+  font-size  : 14px;
+}
+#console .n {
+  background-color: silver;
+  color           : white;
+  border-radius   : 20px;
+  text-align      : center;
+  vertical-align  : middle;
+  width           : 18px;
+}
+#console .icon {
+  font-weight   : bold;
+  text-align    : center;
+  vertical-align: middle;
+  width         : 18px;
+}
+
+.msg-info {
+  background-color: #eef;
+  color           : #009;
+}
+.msg-info .icon {
+  color            : #00f;
+  background-color : #aaf;
+  border-radius    : 6px;
+}
+
+.msg-warn {
+  background-color: #ffd;
+  color:            #900;
+}
+.msg-warn .icon { 
+  background-color: #ff0;
+  color           : #f00;
+  border-radius   : 6px;
+}
+
+.msg-error {
+  background-color: #fee;
+  color           : red;
+}
+.msg-error .icon {
+  background-color: red;
+  color           : #fff;
+  border-radius   : 30px;
+}
+
+.msg-log .icon {
+  vertical-align: top;
+}

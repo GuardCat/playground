@@ -1,0 +1,35 @@
+﻿<img src="" id="img"/>
+	<br/>
+	<a href="" onclick="nextImage(); return false">Вперед</a>
+	<a href="" onclick="previousImage(); return false">Назад</a>
+
+<script>
+var imageName=["http://javascript.ru/forum/images/smilies/mad.gif","http://javascript.ru/forum/images/smilies/sad.gif","http://javascript.ru/forum/images/smilies/dance3.gif","http://javascript.ru/forum/images/smilies/cray.gif","http://javascript.ru/forum/images/smilies/write.gif"];
+var imageListLength=imageName.length;
+var counter=0;
+function pageInit(){
+	var obj=document.getElementById("img");
+	obj.src=imageName[counter];
+}
+function nextImage(){
+	var obj=document.getElementById("img");
+	if(counter>imageListLength){
+		counter=0;
+	}
+	else{
+		counter++;
+	}
+	obj.src=imageName[counter];
+}
+function previousImage(){
+	var obj=document.getElementById("img");
+	if(counter<0){
+		counter=imageListLength-1;
+	}
+	else{
+		counter--;
+	}
+	obj.src=imageName[counter];
+}
+window.onload=pageInit;
+</script>

@@ -1,0 +1,60 @@
+<!DOCTYPE html><html>
+<head>
+  <meta charset = "utf-8">
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; user-scalable=no">
+  <title>GC JSDebugger</title>
+  <link rel = "stylesheet" href = "files/gc/console.css" type = "text/css">
+  <link rel = "stylesheet" href = "files/gc/main.css" type = "text/css">
+  <script src = "../../Libraries/es5-shim/es5-sham.min.js"></script>
+</head>
+<body>
+
+<textarea id = "source" placeholder = "js" wrap = "off"></textarea>
+<div class = "menuButtons">
+  <div id = "runSource"     >run</div>
+  <div id = "cls"           >c</div>
+  <div id = "saveSource"    >s</div>
+  <div id = "readSource"    >r</div>
+  <div id = "eraseLSData"   >e</div>
+  <div id = "settingsButton">i</div>
+</div>
+
+<form name = "settingsForm" id = "settingsForm">
+  <h1>GCJSDebugger v1.6</h1>
+  <h2>Поле ввода</h2>
+  <p>Множители для высоты поля ввода. При множителе 1 поле ввода равно высоте экрана.</p>
+  <label>
+    <input type = "number" name = "portrait">
+      Портрет
+  </label>
+  <label>
+    <input type = "number" name = "landscape">
+      Ландшафт
+  </label>
+  
+  <h2>Настройка Tab</h2>
+  <label>
+    <input type = "text" size="4" name = "tabType">
+      Символы для Tab
+  </label> 
+  
+  
+  <div class="menuButtons">
+    <div id="setDefault"> Default</div>
+    <div id="setCancel">  Cancel</div>
+    <div id="setSave">    Save</div>
+  </div>
+</form>
+
+<div id = "console"></div>
+
+<script src = "files/gc/gcToolsM.js"></script>
+<script src = "files/gc/console.js"></script>
+<script src = "files/gc/onload.js"></script>
+<script>
+window.onerror = function(e) {
+  gc.error(e)
+}
+</script>
+</body>
+</html>

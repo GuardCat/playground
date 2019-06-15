@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<head>
+  <title>Спиральная таблица</title>
+  <meta charset="UTF8">
+
+  <style type="text/css">
+    table {
+      table-layount:   fixed;
+      border-collapse: collapse;
+    }
+
+    table td {
+      width:      15px;
+      height:     15px;
+      padding:    1px;
+      border:     1px solid black;
+      text-align: center;
+    }
+
+  </style>
+
+</head>
+
+
+
+<body>
+<script>
+/**
+ * Функция сreateTable Возвращает тег table с заданным числом столбцов и строк.
+ * не проверяет переданные аргументы на правильность.
+ *    
+ *    @param (number)   cols Количество столбцов
+ *    @param (number)   rows Количество строк
+ *    @param (html tag) таблица
+ */
+createTable = function (cols, rows) {
+  var table = document.createElement("table"), x, y, tr, td;
+
+  for (x = 0; x < cols; x++) {
+    tr = document.createElement("tr");
+
+    for (y = 0; y < rows; y++) {
+      td = document.createElement("td");
+      tr.appendChild(td);
+    }
+
+    table.appendChild(tr);
+  }
+
+  return table
+}
+
+/**
+ * Функция circus Возвращает тег table с ячейками, заполненными числами по спирали из центра.
+ * не проверяет переданные аргументы на правильность.
+ *
+ *   @param (number)   rotate по часовой (1) или против часовой (-1)
+ *   @param (number)   repeat количество витков спирали
+ *   @param (number)   startNum с какого числа начать
+ *   @param (html tag) таблица
+ */
+function circus( rotate, repeat, startNum ) {
+  var 
+    direct = 0,                     /* направление движения "змеи", изначально вверх */
+    rowcols = repeat * 2 + 1,       /* длина стороны таблицы */
+    limit = Math.pow( rowcols, 2 ), /* нужное количество чисел для заполнения таблицы */
+    table = createTable( rowcols, rowcols )
+    nowCell = [ (rowcols - 1) / 2 , (rowcols - 1) / 2 ], /* середина таблицы */
+    nowNum = -1, addNum = 0
+  ;
+
+  rotate =   rotate || 1;
+  startNum = startNum || 0;
+
+  while ( ++nowNum + startNum < limit + startNum ) {
+
+    if (direct > 3) direct = 0;
+    if (direct < 0) direct = 3;
+
+    table.rows[ nowCell[0] ].cells[ nowCell[1] ].innerHTML = nowNum + startNum;
+    if  ( direct === 0 || direct === 2 ) { // если движение по вертикали
+      addNum = direct === 0 ? rotate : -rotate
+      if ( !table.rows[ nowCell[0] ].cells[ nowCell[1] + addNum ].innerHTML) {
+        nowCell[1] += addNum;
+        direct += rotate;
+      } else {
+        nowCell[0] -= addNum * rotate;
+      }
+    } else { // движение по горизонтали
+      addNum = direct === 1 ? rotate : -rotate
+      if ( !table.rows[ nowCell[0] + addNum].cells[ nowCell[1] ].innerHTML) {
+        nowCell[0] += addNum;
+        direct += rotate;
+      } else {
+        nowCell[1] += addNum * rotate;
+      }
+    }
+  }
+  return table
+
+}
+
+var table = circus(1, 7, 0)
+document.body.appendChild(table)
+
+</script>
+
+</body>
+</html>

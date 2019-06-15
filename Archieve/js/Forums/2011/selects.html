@@ -1,0 +1,30 @@
+<html>
+<body>
+	<select id = "sex">
+		<option value="m" selectes>Мужчина</option>
+ 		<option value="f" selectes>Женщина</option>
+	</select> 	
+ 	<select id = "names">
+	</select>
+	<script type="text/javascript">
+		window.onload = function () {
+ 			document.getElementById("sex").onchange(); 			
+		}
+		document.getElementById("sex").onchange = function () {
+			var fnames = ["Мария", "Анастасия", "Юлия", "Антуанетта"];
+ 			var mnames = ["Петр", "Василий", "Юрий", "Октавиан"];
+			setOptions(document.getElementById("names"), this.value == "m" ? mnames : fnames);
+		}
+		function setOptions (sel, arr) {
+			var x, option; 
+			sel.innerHTML = "";
+			for(x = 0; x < arr.length; x++) {
+				option = document.createElement("option");
+				option.value = arr[x];
+				option.innerHTML = arr[x];
+				sel.appendChild(option); 
+			}				
+		}
+	</script> 	 
+</body>
+</html>

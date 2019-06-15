@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset = "utf-8" />
+		<title>Checkboxes</title>
+	</head>
+	<body>
+	  <fieldset title = "Group">
+	    <input type = "checkbox" name = "ttt">
+	    <input type = "checkbox" name = "t">
+	    <input type = "checkbox" name = "ttut">
+	    <input type = "checkbox" name = "ttyt">
+	    <input type = "checkbox" name = "ttth">
+	    <input type = "checkbox" name = "tt">
+	    
+	    <label>
+	      <input type = "checkbox" name = "all">
+        All
+      </label>
+	  </fieldset>
+		<script>
+		  /**
+		    Функция makeChain связывает группу чекбоксов с одним, управляющим их состоянием.
+		    Принимает любй тэг, содержащий чекбоксы и один, главный, чекбокс
+		    ie8+
+		  */
+     makeChain = function( groupOfCheckboxes, masterCheckbox ) {
+       groupOfCheckboxes = groupOfCheckboxes.querySelectorAll( "input[type=checkbox]" );
+       
+       masterCheckbox.onclick = function () {
+         for (var x in groupOfCheckboxes) {
+           groupOfCheckboxes[x].checked = masterCheckbox.checked
+         }
+       }
+       
+     }
+     
+    // Пример использования
+    makeChain( document.querySelector( "fieldset" ), document.getElementsByName("all")[0])
+		</script>
+	</body>
+</html>

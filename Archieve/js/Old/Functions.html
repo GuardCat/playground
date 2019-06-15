@@ -1,0 +1,70 @@
+<html><head></head><body style="height:200px;z-index:8;"> lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. <a href="javascript:alert(1)">lorem ipsum.</a> lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum. lorem ipsum.    <table><td><input id="go" type="button" onclick="alert(window.pageYOffset);"
+    value="test"></table>
+
+</body><script type="text/javascript">
+//p=gid("go").getBoundingClientRect();
+//alert(p.left);
+var pageBlock=new PageBlock();
+pageBlock.on();
+setTimeout(pageBlock.off,2000);
+function msgBox(txt,header,buttons,label){
+  /* выводит сообщение и возвращает 
+      номер нажатой кнопки.
+      txt --- текст сообщения
+      header --- заголовок сообщения
+      buttons --- строка, содержащая 
+        перечисление надписей на кнопках
+        через запятую. Число элементов 
+        определяет количество кнопок. 
+        Максимум --- 5 кнопок.
+      label --- строка с меткой (один символ),
+        который разместится слева от текста.
+  */
+  msgID="msgBody";
+  msgHeaderId="msgHeader";
+
+  alert("msg activated");
+  this.x=function(){alert("it's works")}
+}
+
+function PageBlock(){
+  el=document.createElement('table');
+  with(el.style){
+    opacity="0.6";
+    width=document.body.style.width || "100%";
+    height=document.body.style.height || "100%";
+    backgroundColor="black";
+    position="absolute";
+    top="0px"; left="0px";
+    zIndex="9";
+    display="none";
+  }
+  el.innerHTML="<td>&nbsp;</td>";
+  el.id="blocker";
+  document.body.appendChild(el);
+  this.on=function(){
+    gid("blocker").style.display="block";
+  }
+  this.off=function(){
+    gid("blocker").style.display="none";
+  }
+}
+function gid(txt){
+  return(document.getElementById(txt));
+}
+function proc(nowDig,targDig) {
+  /*Расчет процентов 
+    Возвращает строку в виде: 100%
+    Можно заказать количество цифр
+    после запятой в третьем аргументе.
+  */
+  if (targDig>0){
+    return ((nowDig/targDig*100).toFixed(arguments[2])+"%")
+  } else {
+    return("-1%");
+  }
+}
+</script>
+
+
+</html>

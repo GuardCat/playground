@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Смена картинок с затуханием</title>
+    <meta charset = "utf-8">
+    <style type ="text/css">
+      .photoAlbum {
+        border: 0px;
+        border-collapse: collapse;
+      }
+      
+      .photoAlbum td {padding: 0; margin: 0;}
+      .photoAlbum #back{ float: left }
+      .photoAlbum #forward{ float: right }
+      
+      #monitor {
+        height: 300px
+      }
+    </style>
+  </head>
+  <body>
+    <table class = "photoAlbum">
+      <tr>
+        <td class = "fixedSize"><img src = " " id = "monitor">
+      <tr>
+        <td><input type ="button" value = "<" id = "back">
+        <td><input type ="button" value = ">" id = "forward">
+    </table>
+    <script> 
+      var 
+        srcList = [ /* Список адресов изображений для альбома */
+          /*"http://www.inpic.ru/pic/9153-d6eeaf88.jpg",
+          "http://www.inpic.ru/pic/9043-de987351.jpg",
+          "http://www.inpic.ru/pic/8946-f29acbd3.jpg",
+          "http://www.inpic.ru/pic/8844-f42f24b8.jpg",
+          "http://www.inpic.ru/pic/8836-e2eeb0bc.jpg"*/
+          "1.jpg",
+          "circle.jpg"
+        ],
+        
+        img = document.getElementById( "monitor" ),
+        
+        // Синглтон Event. Простой кроссбраузерный инструмент для работы с событиями
+        Event = {
+          set: window.addEventListener ? 
+            function(elem, event, listener) {
+              elem.addEventListener(event, listener, false)
+              return listener;
+            } :
+            function(elem, event, listener) {
+              var fixedListener = function() {listener.call(elem, window.event)};
+              elem.attachEvent("on" + event, fixedListener);
+              return fixedListener;
+            }
+          ,
+          remove: window.addEventListener ? 
+            function(elem, event, listener) {
+              elem.removeEventListener(event, listener, false)
+            } :
+            function(elem, event, listener) {
+              elem.detachEvent("on" + event, listener);
+            }
+        },
+        
+        /** 
+          Функция для смены src изображения с исчезанием и проявлением.
+          Принимает два аргумента: объект img и новое значение src в виде строки.
+          Нуждается в наличии синглтона Event, хранящемся в глобальном контексте.
+        */
+        changeImg = ( function() {
+          var setOpacity = ( function() { // Один раз проверяем браузер и устанавливаем соответствующую функцию для смены прозрачности
+            return "v" === "\v" ?
+              function(img, op) {
+                img.style.filter = "alpha(opacity=" + op * 100 + ")"; 
+              } :
+              function(img, op) {
+                img.style.opacity = op;
+              }
+            ;
+          } )();
+            
+          return function(img, newSrc) {
+            var 
+              nowOpacity = 1,
+              step = -0.05,
+              ms = 20,
+              needOpacity = 0,
+              listenerId
+            ;
+            
+            function cycle() {
+              if (needOpacity !== nowOpacity) {                       // Оператор opacity in / opacity out
+                nowOpacity = +( ( nowOpacity + step ).toFixed( 2 ) ); // В условии равенство, поэтому округляем, чтобы избежать проблем с погрешностями.
+                setOpacity(img, nowOpacity);
+                setTimeout(cycle, ms);
+              } else if (nowOpacity == 0) {                           //Запускаем появление новой картинки вместо старой
+                img.src = newSrc;
+                listenerId = Event.set( img, "load", function() {
+                  needOpacity = 1;
+                  step = -step;
+                  cycle();
+                  Event.remove( img, "load", listenerId );
+                })
+              }
+            }
+            
+            cycle();    // Всё готово, запускаем смену картинок
+          }
+        } )()
+      ;// global var
+      
+      // Организуем управление альбомом
+      function startOperator(srcList, img, back, forward) {
+        var n = 0;
+        img.src = srcList[0];
+        back.disabled = true;
+        
+        Event.set( back, "click", function() {
+          if ( n > 0) {
+            n--;
+            forward.disabled = ( n >= srcList.length - 1 );
+            this.disabled = ( n <= 0 );
+            changeImg(img, srcList[n]);
+          }
+        } );
+        
+        Event.set( forward, "mouseup", function() {
+          if ( n < srcList.length - 1 ) {
+            n++;
+            this.disabled = ( n >= srcList.length - 1 );
+            back.disabled = ( n <= 0 )
+            changeImg(img, srcList[n]);
+          }
+        } )
+      }
+      
+      /* Запускаем альбом, передавая оператору лист адресов, изображение и кнопки вперёд и назад. */
+      startOperator( srcList, img, document.getElementById( "back" ), document.getElementById( "forward" ) ); 
+
+    </script>
+  </body>
+</html>

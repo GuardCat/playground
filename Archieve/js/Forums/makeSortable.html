@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset = "utf-8">
+	<style type = "text/css">
+	
+	</style>
+</head>
+<body>
+
+<script>
+
+/**
+	Функция makeTable.
+	Принимает:
+		1. Число строк.
+		2. Число столбцов.
+
+		Возвращает: таблицу (DOM элемент table), 
+	заполненную случайными цифрами.
+	Каждый столбец и строка начинаются тегом th.
+*/
+
+function makeMultyTable(ySize, xSize, className,  caption) {
+	var 
+		t = document.createElement("table"), //сама таблица
+		tr, td,	// Для хранения объектов строки и ячейки
+		needTh		// Индикатор необходимости элемента th вместо td
+	; a
+	
+	for( y = 1; y <= ySize; y++ ) {
+		tr = t.insertRow(-1); // создаём строки.
+	
+		for( x = 1; x <= xSize; x++ ) {
+			needTh = ( x === 1 || y === 1); // Нужен th вместо td?
+			td = needTh ?
+				document.createElement("th"):
+				tr.insertCell(-1)
+			;
+			td.innerHTML = x * y;
+			if (needTh) tr.appendChild(td); // В отличие от insertCell, createElement никуда не цепляет созданный тег. Цепляем сами. 
+		}
+	}
+		
+	return t; // Возвращаем созданную таблицу.
+}
+
+document.body.appendChild( makeMultyTable( 9, 9, "multy", "Таблица умножения" ) ); // Создаём классическую таблицу Пифагора с заголовком.
+
+</script>
+</body>
+</html>

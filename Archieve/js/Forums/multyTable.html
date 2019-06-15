@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset = "utf-8">
+	<style type = "text/css">
+		.multy {
+			border-collapse: collapse;
+			font-family: arial, tahoma;
+		}
+		
+		.multy caption {
+			color:maroon;
+			font-size				: 25px;
+			font-weight			: bold;
+			padding						: 5px;
+			border							: 1px solid gray;
+			border-bottom	: 0px;
+		}
+		
+		.multy td, .multy th {
+			border								: 1px solid gray;
+			width								: 40px;
+			height								: 40px;
+			text-align				: center;
+			vertical-align	: middle;
+		}
+		
+		.multy th {
+			background-color: #e0e0e0;
+		}
+	</style>
+</head>
+<body>
+
+<script>
+
+/**
+	Функция makeMultyTable.
+	Принимает:
+		1. Число строк.
+		2. Число столбцов.
+		3. CSS класс для таблицы.
+		4. Заголовок для таблицы.
+
+		Возвращает: таблицу (DOM элемент table), 
+	заполненную по правилам таблицы Пифагора с
+	заголовком (если был передан).
+	Каждый столбец и строка начинаются тегом th.
+*/
+
+function makeMultyTable(ySize, xSize, className,  caption) {
+	var 
+		t = document.createElement("table"), //сама таблица
+		tr, td,	// Для хранения объектов строки и ячейки
+		cpt,			// Для тега caption
+		needTh		// Индикатор необходимости элемента th вместо td
+	;
+	t.className = className;
+	
+	if (caption) { // Если передан текст для заголовка, создаём caption в таблице.
+		cpt = document.createElement("caption");
+		cpt.innerHTML = caption;
+		t.appendChild(cpt);
+	}
+	
+	for( y = 1; y <= ySize; y++ ) {
+		tr = t.insertRow(-1); // создаём строки.
+	
+		for( x = 1; x <= xSize; x++ ) {
+			needTh = ( x === 1 || y === 1); // Нужен th вместо td?
+			td = needTh ?
+				document.createElement("th"):
+				tr.insertCell(-1)
+			;
+			td.innerHTML = x * y;
+			if (needTh) tr.appendChild(td); // В отличие от insertCell, createElement никуда не цепляет созданный тег. Цепляем сами. 
+		}
+	}
+		
+	return t; // Возвращаем созданную таблицу.
+}
+
+document.body.appendChild( makeMultyTable( 9, 9, "multy", "Таблица умножения" ) ); // Создаём классическую таблицу Пифагора с заголовком.
+
+</script>
+</body>
+</html>

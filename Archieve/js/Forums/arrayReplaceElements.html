@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Заменить отрицательные элементы</title>
+	</head>
+	<body>
+		<h2>Массив до замены</h2>
+		<script>
+			var array;
+			function makeArray(n) {
+				//Возвращает массив, заполненный случайными целыми числами от -100 до 100
+				var result = [];
+				while(result.length < n) {
+					result.push((Math.random() * 100 - Math.random() * 100).toFixed(0));
+				}
+				return result;
+			}
+			function changeArray(arr) {
+				// Меняет переданный массив, делая все элементы положительными.
+				var x;
+				for(x = 0; x < arr.length; x++) {
+					if(arr[x] < 0) {
+						arr[x] = -arr[x];
+					}
+				}
+			}
+			array = makeArray(10);
+ 			document.write(array.toString()); 
+			changeArray(array);
+			document.write("<h2>Массив после замены</h2>");
+			document.write(array.toString());
+			document.close();
+		</script>
+	</body>
+</html>
