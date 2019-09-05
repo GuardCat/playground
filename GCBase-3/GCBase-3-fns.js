@@ -35,8 +35,17 @@ let base = {
 };
 
 let tinydb = {
-	getValue: (base, tableName, fieldName) => {
+	getValue: (base, tableName, fieldName, key) => {
+		return base.__relations[tableName][fieldName].type === "single" ?
+		  base[ ]
+	},
 
+	getEntriesByKey: (base, tableName, fieldName, key) {
+	  return base[tableName].filter( entry => entry[fieldName] === key );
+	},
+
+	getEntryByKey: (base, tableName, fieldName, key) {
+	  return base[tableName].find( entry => entry[fieldName] === key);
 	}
 };
 
