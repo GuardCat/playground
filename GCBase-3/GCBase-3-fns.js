@@ -29,7 +29,14 @@ let base = {
 	],
 
 	__relations: [
-		{table: "events", field: "students", type: "one-to-many", toTable: "students", byField: "id"},
-		{table: "events", field: "theme", type: "one-to-one", toTable: "trainings", byField: "id"}
+		{table: "events", field: "students", type: "multiply", toTable: "students", byField: "id"},
+		{table: "events", field: "theme", type: "single", toTable: "trainings", byField: "id"}
 	]
 };
+
+let tinydb = {
+	getValue: (base, tableName, fieldName) => {
+
+	}
+};
+
