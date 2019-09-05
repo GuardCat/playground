@@ -28,10 +28,12 @@ let base = {
 		{ id: 3, date: "2019-06-01", theme: 5, students: [0, 3, 2] }
 	],
 
-	__relations: [
-		{table: "events", field: "students", type: "one-to-many", toTable: "students", byField: "id"},
-		{table: "events", field: "theme", type: "one-to-one", toTable: "trainings", byField: "id"}
-	]
+	__relations: {
+		"events": {
+			"students": { type: "many", toTable: "students",	byField: "id"},
+			"theme": 	{ type: "one",	toTable: "trainings",	byField: "id"}
+		}
+	}
 };
 
 let events, trainings, students, ourTrainingId;
@@ -90,3 +92,8 @@ students.sort( (a, b) => a.visits < b.visits ? 1 : -1 );
 
 console.info("Exersice 3: список студентов с количеством визитов на любые тренинги. Отсортировать по убыванию визитов.");
 console.dir(students);
+
+// Exercise 4
+function getValue(base, tableRecieverName, field, entry) {
+	let rule = base.__relations[tableRecieverName];
+}
