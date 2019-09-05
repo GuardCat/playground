@@ -34,18 +34,37 @@ let base = {
 	]
 };
 
-let tinydb = {
-	getValue: (base, tableName, fieldName, key) => {
-		return base.__relations[tableName][fieldName].type === "single" ?
-		  base[ ]
-	},
+class TinyDB {
+	constructor(base) {
+	  this.base = base;
+	}
 
-	getEntriesByKey: (base, tableName, fieldName, key) {
+	getValueFromRelation (tableName, fieldName, key)  {
+		throwIfWrongRelation( );
+		let
+			base = this.base,
+			relation = base.__relations[tableName][fieldName],
+			multiply = relation.type === "multiply"
+		;
+
+		return multiply ?
+			base[]
+		  base[0]
+	  	: 0;
+	}
+
+	getEntriesByKey(tableName, fieldName, key) {
 	  return base[tableName].filter( entry => entry[fieldName] === key );
-	},
+	}
 
-	getEntryByKey: (base, tableName, fieldName, key) {
+	getEntryByKey(tableName, fieldName, key) {
 	  return base[tableName].find( entry => entry[fieldName] === key);
 	}
-};
 
+	throwIfWrongRelation(tableName, fieldName) {
+		let base = this.base;
+		if ( !(base.__relations && base.__relations[tableName] && base.__relations[tableName][fieldName]) ) {
+			throw new Error(`There is not relation's description in base.__relations. Table: ${tableName}, field: ${fieldName}`)
+		}
+	}
+}
