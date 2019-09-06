@@ -1,15 +1,14 @@
 /*jshint esversion: 6 */
 /*jshint browser: true */
 
-"use strict";
 
 let base = {
 	students: [
-		{ id: 0, FIO: "Ivan",	grade: "III"},
-		{ id: 1, FIO: "Maria",	grade: "II"	},
-		{ id: 2, FIO: "Petr",	grade: "I"	},
-		{ id: 3, FIO: "Anton",	grade: "IV"	},
-		{ id: 4, FIO: "Julia",	grade: "V"	}
+		{ id: 0, fio: "Ivan",	grade: "III"},
+		{ id: 1, fio: "Maria",	grade: "II"	},
+		{ id: 2, fio: "Petr",	grade: "I"	},
+		{ id: 3, fio: "Anton",	grade: "IV"	},
+		{ id: 4, fio: "Julia",	grade: "V"	}
 	],
 
 	trainings: [
@@ -28,10 +27,12 @@ let base = {
 		{ id: 3, date: "2019-06-01", theme: 5, students: [0, 3, 2] }
 	],
 
-	__relations: [
-		{table: "events", field: "students", type: "multiply", toTable: "students", byField: "id"},
-		{table: "events", field: "theme", type: "single", toTable: "trainings", byField: "id"}
-	]
+	__relations: {
+		"events": {
+			"students": {type: "multiply",	toTable: "students",	byField: "id"},
+			"theme":	{type: "single",	toTable: "trainings",	byField: "id"}
+		}
+	}
 };
 
 class TinyDB {
@@ -40,21 +41,26 @@ class TinyDB {
 	}
 
 	getValueFromRelation (tableName, fieldName, key)  {
-		throwIfWrongRelation( );
+		this.throwIfWrongRelation(tableName, fieldName);
 		let
 			base = this.base,
 			relation = base.__relations[tableName][fieldName],
 			multiply = relation.type === "multiply"
 		;
-
+console.log(multiply);
 		return multiply ?
-			base[]
-		  base[0]
-	  	: 0;
+			base[relation.toTable].filter( i => i[ relation.toTable.byField ] === key )
+		:
+			base[relation.toTable].find( i => i[ relation.toTable.byField ] === key )
+		;
 	}
 
 	getEntriesByKey(tableName, fieldName, key) {
-	  return base[tableName].filter( entry => entry[fieldName] === key );
+		return key instanceof Function ?
+			base[tableName].filter( entry => key(entry[fieldName] ) )
+		:
+			base[tableName].filter( entry => entry[fieldName] === key )
+		;
 	}
 
 	getEntryByKey(tableName, fieldName, key) {
@@ -64,7 +70,7 @@ class TinyDB {
 	throwIfWrongRelation(tableName, fieldName) {
 		let base = this.base;
 		if ( !(base.__relations && base.__relations[tableName] && base.__relations[tableName][fieldName]) ) {
-			throw new Error(`There is not relation's description in base.__relations. Table: ${tableName}, field: ${fieldName}`)
+			throw new Error(`There is not relation's description in base.__relations. Table: ${tableName}, field: ${fieldName}`);
 		}
 	}
 }
