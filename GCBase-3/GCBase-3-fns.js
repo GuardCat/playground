@@ -29,8 +29,8 @@ let base = {
 
 	__relations: {
 		"events": {
-			"students": {type: "multiply",	toTable: "students",	byField: "id"},
-			"theme":	{type: "single",	toTable: "trainings",	byField: "id"}
+			"students": {from: "many",	to: "one",	toTable: "students",	byField: "id"},
+			"theme":	{from: "one",	to: "one",	toTable: "trainings",	byField: "id"}
 		}
 	}
 };
@@ -42,34 +42,41 @@ class TinyDB {
 
 	getFromRelation (tableName, fieldName, key)  {
 		this.throwIfWrongRelation(tableName, fieldName);
+		
 		let
-			base = this.base,
-			relation = base.__relations[tableName][fieldName],
-			multiply = relation.type === "multiply"
+			base = this.base, getBySomething,
+			relation = base.__relations[tableName][fieldName]
 		;
-
-		return multiply ?
-			this.getEntries(relation.toTable, relation.byField, key)
-		:
-			this.getEntry(relation.toTable, relation.byField, key)
-		;
+		
+		if (relation.from === "many" && relation.to	=== "many")	getBySomething = this.getEntriesByArray.bind(this);
+		if (relation.from === "many" && relation.to	=== "one")	getBySomething = this.getEntryByArray.bind(this);
+		if (relation.from === "one" && relation.to	=== "many")	getBySomething = this.getEntries.bind(this);
+		if (relation.from === "one" && relation.to	=== "one")	getBySomething = this.getEntry.bind(this);
+			
+		return getBySomething(relation.toTable, relation.byField, key);
 	}
 
+	
 	getEntries(tableName, fieldName, key) {
-		console.log(tableName, fieldName, key);
 		return key instanceof Function ?
-			base[tableName].filter( entry => key(entry[fieldName] ) )
+			base[tableName].filter( entry => key(entry[fieldName]) )
 		:
 			base[tableName].filter( entry => entry[fieldName] === key )
 		;
 	}
-
+	getEntriesByArray(tableName, fieldName, arr) {
+		return arr.map( i => this.getEntries(tableName, fieldName, i) );
+	}
+	
 	getEntry(tableName, fieldName, key) {
 		return key instanceof Function ?
-			base[tableName].find( entry => key(entry[fieldName] ) )
+			base[tableName].find( entry => key(entry[fieldName]) )
 		:
 			base[tableName].find( entry => entry[fieldName] === key )
 		;
+	}
+	getEntryByArray(tableName, fieldName, arr) {
+		return arr.map( i => this.getEntry(tableName, fieldName, i) );
 	}
 
 	throwIfWrongRelation(tableName, fieldName) {
@@ -79,3 +86,6 @@ class TinyDB {
 		}
 	}
 }
+
+let db = new TinyDB(base);
+console.log( db.getFromRelation("events", "theme", 5) );
