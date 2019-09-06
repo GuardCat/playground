@@ -42,41 +42,21 @@ class TinyDB {
 
 	getFromRelation (tableName, fieldName, key)  {
 		this.throwIfWrongRelation(tableName, fieldName);
-		
-		let
-			base = this.base, getBySomething,
-			relation = base.__relations[tableName][fieldName]
-		;
-		
-		if (relation.from === "many" && relation.to	=== "many")	getBySomething = this.getEntriesByArray.bind(this);
-		if (relation.from === "many" && relation.to	=== "one")	getBySomething = this.getEntryByArray.bind(this);
-		if (relation.from === "one" && relation.to	=== "many")	getBySomething = this.getEntries.bind(this);
-		if (relation.from === "one" && relation.to	=== "one")	getBySomething = this.getEntry.bind(this);
-			
-		return getBySomething(relation.toTable, relation.byField, key);
+
+		let many = this.base.__relations[tableName][fieldName].to === "many";
+
+		return this.get(tableName, fieldName, key, many);
 	}
 
-	
-	getEntries(tableName, fieldName, key) {
+	get(tableName, fieldName, key, all = false) {
+		if (key instanceof Array) return key.map( i => this.get(tableName, fieldName, i) );
+		let fn = all ? "filter" : "find";
+
 		return key instanceof Function ?
-			base[tableName].filter( entry => key(entry[fieldName]) )
+			base[tableName][fn]( entry => key(entry) )
 		:
-			base[tableName].filter( entry => entry[fieldName] === key )
+			base[tableName][fn]( entry => entry[fieldName] === key )
 		;
-	}
-	getEntriesByArray(tableName, fieldName, arr) {
-		return arr.map( i => this.getEntries(tableName, fieldName, i) );
-	}
-	
-	getEntry(tableName, fieldName, key) {
-		return key instanceof Function ?
-			base[tableName].find( entry => key(entry[fieldName]) )
-		:
-			base[tableName].find( entry => entry[fieldName] === key )
-		;
-	}
-	getEntryByArray(tableName, fieldName, arr) {
-		return arr.map( i => this.getEntry(tableName, fieldName, i) );
 	}
 
 	throwIfWrongRelation(tableName, fieldName) {
@@ -88,4 +68,4 @@ class TinyDB {
 }
 
 let db = new TinyDB(base);
-console.log( db.getFromRelation("events", "theme", 5) );
+console.dir( db.getFromRelation("events", "theme", 5) );
