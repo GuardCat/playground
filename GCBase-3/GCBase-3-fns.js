@@ -40,22 +40,23 @@ class TinyDB {
 	  this.base = base;
 	}
 
-	getValueFromRelation (tableName, fieldName, key)  {
+	getFromRelation (tableName, fieldName, key)  {
 		this.throwIfWrongRelation(tableName, fieldName);
 		let
 			base = this.base,
 			relation = base.__relations[tableName][fieldName],
 			multiply = relation.type === "multiply"
 		;
-console.log(multiply);
+
 		return multiply ?
-			base[relation.toTable].filter( i => i[ relation.toTable.byField ] === key )
+			this.getEntries(relation.toTable, relation.byField, key)
 		:
-			base[relation.toTable].find( i => i[ relation.toTable.byField ] === key )
+			this.getEntry(relation.toTable, relation.byField, key)
 		;
 	}
 
-	getEntriesByKey(tableName, fieldName, key) {
+	getEntries(tableName, fieldName, key) {
+		console.log(tableName, fieldName, key);
 		return key instanceof Function ?
 			base[tableName].filter( entry => key(entry[fieldName] ) )
 		:
@@ -63,8 +64,12 @@ console.log(multiply);
 		;
 	}
 
-	getEntryByKey(tableName, fieldName, key) {
-	  return base[tableName].find( entry => entry[fieldName] === key);
+	getEntry(tableName, fieldName, key) {
+		return key instanceof Function ?
+			base[tableName].find( entry => key(entry[fieldName] ) )
+		:
+			base[tableName].find( entry => entry[fieldName] === key )
+		;
 	}
 
 	throwIfWrongRelation(tableName, fieldName) {
