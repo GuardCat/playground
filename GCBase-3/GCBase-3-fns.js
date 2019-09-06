@@ -55,7 +55,6 @@ class TinyDB {
 			
 		return getBySomething(relation.toTable, relation.byField, key);
 	}
-
 	
 	getEntries(tableName, fieldName, key) {
 		return key instanceof Function ?
