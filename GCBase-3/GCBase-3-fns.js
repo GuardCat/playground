@@ -29,7 +29,7 @@ let base = {
 
 	__relations: {
 		"events": {
-			"students": {from: "many",	to: "one",	toTable: "students",	byField: "id"},
+			"students":	{from: "many",	to: "one",	toTable: "students",	byField: "id"},
 			"theme":	{from: "one",	to: "one",	toTable: "trainings",	byField: "id"}
 		}
 	}
