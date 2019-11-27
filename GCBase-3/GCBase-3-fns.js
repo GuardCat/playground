@@ -57,6 +57,10 @@ class TinyDB {
 			base[tableName][fn]( entry => entry[fieldName] === key )
 		;
 	}
+	
+	del(tableName, fieldName, key) {
+		if (!fieldName) return base.
+	}
 
 	throwIfWrongRelation(tableName, fieldName) {
 		let base = this.base;
