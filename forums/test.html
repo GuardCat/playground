@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Тест</title>
+	<meta charset="utf-8">
+</head>
+
+<body>
+	<header>
+		<h1>Тест</h1>
+	</header>
+	
+	<main>
+		<article class="test">
+			<ul>
+			
+				<li>Первый вопрос
+					<ul>
+						<li><label><input type="radio" name="q1">Неверный ответ</label></li>
+						<li><label><input type="radio" name="q1">Неверный ответ</label></li>
+						<li class="right"><label><input type="radio" name="q1">Верный ответ</label></li>
+						<li><label><input type="radio" name="q1">Неверный ответ</label></li>
+						<li><label><input type="radio" name="q1">Неверный ответ</label></li>						
+					</ul>
+				</li>
+				
+				<li>Второй вопрос
+					<ul>
+						<li><label><input type="radio" name="q2">Неверный ответ</label></li>
+						<li class="right"><label><input type="radio" name="q2">Верный ответ</label></li>
+						<li><label><input type="radio" name="q2">Неверный ответ</label></li>
+						<li><label><input type="radio" name="q2">Неверный ответ</label></li>
+						<li><label><input type="radio" name="q2">Неверный ответ</label></li>						
+					</ul>
+				</li>
+				
+				<li>Третий вопрос
+					<ul>
+						<li><label><input type="radio" name="q3">Неверный ответ</label></li>
+						<li class="right"><label><input type="radio" name="q3">Верный ответ</label></li>
+						<li><label><input type="radio" name="q3">Неверный ответ</label></li>
+						<li><label><input type="radio" name="q3">Неверный ответ</label></li>
+						<li><label><input type="radio" name="q3">Неверный ответ</label></li>						
+					</ul>
+				</li>
+				
+			</ul>
+		</article>
+		
+		<input type="button" value="Посчитать" onclick="testCount( )">
+		
+	</main>
+	
+	<script>	
+		function testCount( ) {
+			const
+				test = document.querySelector(".test"),
+				questionsCount = test.querySelectorAll("ul").length - 1,
+				checked = test.querySelectorAll("input:checked"),
+				checkedCount = checked.length,
+				right = test.querySelectorAll("li.right input:checked"),
+				rightCount = right.length
+			; 
+			alert( `Вопросов в тесте: ${questionsCount}
+Вопросов без ответа: ${questionsCount - checkedCount}, ${100 - (checkedCount / questionsCount * 100).toFixed(0)}%
+Верных ответов: ${rightCount}, ${(rightCount / questionsCount * 100).toFixed(0)}%
+`)
+		}
+	</script>
+	
+</body>
+
+</html>
