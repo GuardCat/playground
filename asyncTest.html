@@ -1,0 +1,22 @@
+<html>
+	<body>
+		<input>
+		<input type="button" value="do nothing">
+	<script>
+		async function director( ) {
+			let n = await blocker(1000);
+			alert(`${n.length} ? done!`)
+		}
+		async function blocker(times) {
+			let victim = [ ]
+			for (let x = 0; x < times; x++) {
+				victim.push( Math.random( ) );
+				victim.sort( );
+			}
+			return victim;
+		}
+		</body>
+
+		window.addEventListener("load", director, false);
+	</script>
+</html>
