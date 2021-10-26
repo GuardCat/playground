@@ -21,5 +21,4 @@ for (let x = 0; x < 10000; x++) {
 	a.push({a: x});
 }
 
-aForEach(a, (el, i, arr) => el.a++, 10000).then(alert);
-alert(2);
+aForEach(a, (el, i, arr) => el.a++, 1000).then(alert);
