@@ -1,6 +1,10 @@
 class Better {
 	constructor(days = [ ]) {
-		this.days = days;
+		this.lsKey = "beBetterDays";
+		const lsData = localStorage[this.lsKey] ? JSON.parse( localStorage[this.lsKey] ) : [ ];
+		this.days = [ ...days, ...lsData];
+		this.types = ["good", "bad", "unknown"];
+		window.addEventListener( "beforeunload", this.save.bind(this) );
 	}
 	add(day) {
 		if (day instanceof Array) return day.map( el => this.add(el) );
@@ -9,9 +13,23 @@ class Better {
 		this.days.push(day);
 	}
 
+	toggle(day) {
+		const indexNow = this.types.findIndex(day.type);
+		let indexNext = indexNow >= this.types.length - 1 ? 0 : indexNow + 1; 
+		day.type = this.types[indexNext];
+	}
+
+	fix(day) {
+		day.fixed = true;
+	}
+
+	save( ) {
+		window.localStorage[this.lsKey] = JSON.stringify(this.days);
+	}
+
 	check(day) {
 		const 
-			template = {date: new Date(), type: ["good", "bad", "unknown"], fixed: false},
+			template = {date: new Date(), type: this.types, fixed: false},
 			keys = Object.keys(template),
 			dkeys = Object.keys(day)
 		;
